@@ -1,0 +1,5 @@
+export const get_all_staffs = 'SELECT * FROM staffs'
+export const sort = 'SELECT * FROM staffs ORDER BY $1 $2'
+export const staff_detail = 'SELECT * FROM staffs WHERE id = $1'
+export const staff_create = 'INSERT INTO staffs (first_name, last_name, store, position, username, password, permission) values ($1, $2, $3, $4, $5, $6, $7)'
+export const staff_update = ''
