@@ -1,0 +1,12 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+main {
+    margin-left: 200px;
+    display: grid;
+    height: 100vh;
+    overflow: scroll;
+}
+

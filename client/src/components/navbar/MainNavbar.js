@@ -1,19 +1,19 @@
-import Link from "next/link"
+import {Link} from "react-router-dom"
 
 
-const MainNavbar = ({}) => {
+const MainNavbar = () => {
     return (
         <nav className='navbar main'>
-            <Link href=''>Home</Link>
-            <Link href=''>Search</Link>
-            <Link href=''>Stores</Link>
-            <Link href=''>Inventory</Link>
-            <Link href=''>Products</Link>
-            <Link href=''>Customers</Link>
-            <Link href=''>Sales</Link>
-            <Link href=''>Purchase</Link>
-            <Link href=''>Supplier</Link>
-            <Link href=''>Staff</Link>
+            <Link to='' className='navbar-item home'>Home</Link>
+            <Link to=''>Search</Link>
+            <Link to=''>Stores</Link>
+            <Link to=''>Inventory</Link>
+            <Link to=''>Products</Link>
+            <Link to=''>Customers</Link>
+            <Link to=''>Sales</Link>
+            <Link to=''>Purchase</Link>
+            <Link to=''>Supplier</Link>
+            <Link to=''>Staff</Link>
         </nav>
     )
 }

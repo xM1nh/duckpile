@@ -1,0 +1,18 @@
+.navbar {
+    outline: 1px solid black;
+    height: 100vh;
+    width: 200px;
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    z-index: 1;
+    padding-top: 15px;
+
+    font-size: 1.5em;
+}
+
+.navbar-item.home {
+    padding-bottom: 100px;
+}

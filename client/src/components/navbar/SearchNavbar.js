@@ -1,6 +1,6 @@
-import Link from "next/link"
+import Link from "react-router-dom"
 
-const SearchNavbar = ({}) => {
+const SearchNavbar = () => {
     return (
         <nav className="navbar search">
             <form action='' method='POST'>
@@ -13,7 +13,7 @@ const SearchNavbar = ({}) => {
                 <button type='submit'>Search</button>
             </form>
 
-            <Link href=''>Back</Link>
+            <Link to=''>Back</Link>
         </nav>
     )
 }
