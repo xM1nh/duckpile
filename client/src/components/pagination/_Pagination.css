@@ -1,0 +1,29 @@
+nav.pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 10px;
+}
+
+.pagination button {
+    padding: 5px;
+    height: 40px;
+    width: 60px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 1px
+}
+
+.pagination-nav {
+    display: flex;
+    flex-direction: row;
+}
+
+.pagination-nav div {
+    padding: 10px;
+    font-weight: bold;
+}
+
+#current {
+    background-color: lightblue;
+}

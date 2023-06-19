@@ -8,7 +8,7 @@ const MainNavbar = () => {
             <Link to=''>Search</Link>
             <Link to=''>Stores</Link>
             <Link to=''>Inventory</Link>
-            <Link to=''>Products</Link>
+            <Link to='/products'>Products</Link>
             <Link to=''>Customers</Link>
             <Link to=''>Sales</Link>
             <Link to=''>Purchase</Link>

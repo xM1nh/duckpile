@@ -4,6 +4,8 @@ const router = express.Router()
 
 router.get('/', product_controller.product_list)
 
+router.get('/pages/:page/:limit', product_controller.paginated_product_get)
+
 router.get('/product/:id', product_controller.product_detail)
 
 router.get('/product/create', product_controller.product_delete_get)

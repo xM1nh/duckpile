@@ -1,0 +1,15 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #ddd;
+    table-layout: fixed;
+    white-space: normal;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+    border-left: 1px solid #d6d6d6;
+    word-wrap: break-word;
+}

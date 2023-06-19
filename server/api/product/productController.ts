@@ -7,8 +7,18 @@ export const product_list = asyncHandler(async (req, res, next) => {
     res.status(200).json(products.rows)
 })
 
+export const paginated_product_get = asyncHandler(async (req, res, next) => {
+    const page = parseInt(req.params.page)
+    const limit = parseInt(req.params.limit)
+    const offset = (page - 1) * limit
+    const products = await pool.query(product_queries.get_paginated_products, [limit, offset])
+    res.status(200).json(products.rows)
+})
+
 export const product_detail = asyncHandler(async (req, res, next) => {
-    res.send('not implemented: product detail')
+    const product_id = parseInt(req.params.id)
+    const product = await pool.query(product_queries.product_detail, [product_id])
+    res.status(200).json(product.rows)
 })
 
 export const product_create_get = asyncHandler(async (req, res, next) => {

@@ -9,4 +9,5 @@ section.summary {
     justify-items: center;
     align-items: center;
     outline: 1px solid black;
+    margin: 10px;
 }
