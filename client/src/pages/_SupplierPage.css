@@ -1,0 +1,16 @@
+.supplier > main > .supplier-list {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr 5fr 1fr;
+}
+
+.supplier-list.table{
+    height: 70vh;
+}
+
+.supplier-list.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5em;
+}

@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import './_ProductDetailPage.css'
 import ProductNavbar from '../components/navbar/ProductNavbar'
 import Table from '../components/container/Table'
-import { useState } from 'react'
+import Spinner from '../components/spinner/Spinner'
 
 const ProductDetailPage = () => {
     const {id} = useParams()
@@ -12,7 +12,8 @@ const ProductDetailPage = () => {
 
     const product = apiData[0]
 
-    if (product === undefined) return (<div>loading</div>)
+    if (isLoading || product === undefined) return <Spinner />
+    else if (serverErr) return (<div>404</div>)
     else {
     return (
         <div className="page product-detail-page">

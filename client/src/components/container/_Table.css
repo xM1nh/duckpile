@@ -7,9 +7,20 @@ table {
     white-space: normal;
 }
 
+th {
+    position: sticky;
+    top: 0;
+    background: white;
+    background-clip: padding-box;
+}
+
 th, td {
     text-align: left;
     padding: 8px;
     border-left: 1px solid #d6d6d6;
     word-wrap: break-word;
+}
+
+tbody {
+    margin-top: 100px;
 }

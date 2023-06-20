@@ -1,0 +1,16 @@
+.customer > main > .customer-list {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr 5fr 1fr;
+}
+
+.customer-list.table{
+    height: 70vh;
+}
+
+.customer-list.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5em;
+}
