@@ -1,8 +1,8 @@
-.page.product_list main {
+.page.sales_list main {
     grid-template-rows: 1fr 4fr;
 }
 
-.product_list > main > .summary {
+.sales > main > .summary {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     outline: 1px solid black;
@@ -10,17 +10,17 @@
     gap: 1%;
 }
 
-.product-table-title {
+.sales-table-title {
     text-align: center;
     padding: 20px;
     font-size: 2em;
 }
 
-.product-table {
+.sales-table {
     margin: 10px;
 }
 
-.product-table-content {
+.sales-table-content {
     outline: 1px solid black;
     overflow-x: scroll;
     overflow-y: scroll;

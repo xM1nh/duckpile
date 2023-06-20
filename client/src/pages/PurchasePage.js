@@ -4,8 +4,9 @@ import useFetch from '../hooks/useFetch'
 import usePagination from "../hooks/usePagination"
 import './_PurchasePage.css'
 import Table from "../components/container/Table"
+import SummaryContainer from '../components/container/SummaryContainer'
 
-const itemNumPerPage = 1
+const itemNumPerPage = 10
 const itemCount = 9
 
 const ProductListPage = () => { 
@@ -20,7 +21,11 @@ const ProductListPage = () => {
             <PurchaseNavbar />
 
             <main>
-                <section className="summary">sdfgsdgf</section>
+                <section className="summary">
+                    <SummaryContainer />
+                    <SummaryContainer />
+                    <SummaryContainer />
+                </section>
                 <section className="recent-purchase">
                     <div className="purchase-table">
                         <div className="purchase-table-title">Recent Purchases</div>

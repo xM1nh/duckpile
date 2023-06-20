@@ -10,7 +10,7 @@ const MainNavbar = () => {
             <Link to=''>Inventory</Link>
             <Link to='/products'>Products</Link>
             <Link to=''>Customers</Link>
-            <Link to=''>Sales</Link>
+            <Link to='/sales'>Sales</Link>
             <Link to='/purchases'>Purchase</Link>
             <Link to=''>Supplier</Link>
             <Link to=''>Staff</Link>

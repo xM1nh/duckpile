@@ -1,5 +1,13 @@
-.page.purchase_list main {
+.page.purchase main {
     grid-template-rows: 1fr 4fr;
+}
+
+.purchase > main >.summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    outline: 1px solid black;
+    padding: 1%;
+    gap: 1%;
 }
 
 .purchase-table-title {
@@ -16,5 +24,5 @@
     outline: 1px solid black;
     overflow-x: scroll;
     overflow-y: scroll;
-    min-height: 500px;
+    height: 500px;
 }
