@@ -32,7 +32,6 @@ const ProductListPage = () => {
                             <Table 
                                 header_array={['Name', 'Type', 'Brand', 'Supplier', 'SKU', 'Content', 'Images', 'Expire Date', 'Price', 'Discount']}
                                 data_array={apiData}
-                                param='product'
                             />
                         </div>
 

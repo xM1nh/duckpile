@@ -23,10 +23,10 @@ const Table = ({param, header_array, data_array}) => {
                             {
                                 Object.keys(object).map((key, i) => {
                                     if (key === 'name') return (
-                                        <td key={i}><Link to={`/${param}/${object.id}`}>{object[key]}</Link></td>
+                                        <td key={i}><Link to={`/product/${object.id}`}>{object[key]}</Link></td>
                                     )
                                      if (key !== 'id') return (
-                                        <td key={i}>{object[key]}</td>
+                                        <td key={i} id={object.id}>{object[key]}</td>
                                     )
                                 })
                             }
