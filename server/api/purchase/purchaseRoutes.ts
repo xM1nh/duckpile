@@ -2,7 +2,7 @@ import express from 'express'
 import * as purchase_controller from './purchaseController'
 const router = express.Router()
 
-router.get('/', purchase_controller.purchase_list)
+router.get('/:page/:limit', purchase_controller.purchase_list)
 
 router.get('/purchase/:id', purchase_controller.purchase_detail)
 

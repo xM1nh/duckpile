@@ -18,8 +18,9 @@ const usePagination = (itemNum, itemNumPerPage) => {
         })
     }
 
-    const handlePage = (e) => {
-        setCurrentpage(Number(e.target.id))
+    const handlePage = (e) => { 
+        if (e.target.id === 'current') return
+        else setCurrentpage(Number(e.target.id))
     }
 
     return {currentPage, pageCount, handleNext, handlePrev, handlePage}

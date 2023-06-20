@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import './_Pagination.css'
 
 const Pagination = ({url, currentPage, pageCount, handlePrev, handleNext, handlePage}) => {

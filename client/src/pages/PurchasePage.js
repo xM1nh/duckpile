@@ -1,8 +1,8 @@
-import ProductNavbar from "../components/navbar/ProductNavbar"
+import PurchaseNavbar from '../components/navbar/PurchaseNavbar'
 import Pagination from "../components/pagination/Pagination"
 import useFetch from '../hooks/useFetch'
 import usePagination from "../hooks/usePagination"
-import './_ProductListPage.css'
+import './_PurchasePage.css'
 import Table from "../components/container/Table"
 
 const itemNumPerPage = 1
@@ -11,23 +11,24 @@ const itemCount = 9
 const ProductListPage = () => { 
     const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(itemCount, itemNumPerPage)
 
-    var url = `/api/v1/products/pages/${currentPage}/${itemNumPerPage}`
+    var url = `/api/v1/purchases/${currentPage}/${itemNumPerPage}`
 
     const {isLoading, apiData, serverErr} = useFetch(url)
 
     return (
-        <div className='page product_list'>
-            <ProductNavbar />
+        <div className='page purchase'>
+            <PurchaseNavbar />
+
             <main>
                 <section className="summary">sdfgsdgf</section>
-                <section className="product_list">
-                    <div className="product-table">
-                        <div className="product-table-title">All Products</div>
-                        <div className="product-table-content">
+                <section className="recent-purchase">
+                    <div className="purchase-table">
+                        <div className="purchase-table-title">Recent Purchases</div>
+                        <div className="purchase-table-content">
                             <Table 
-                                header_array={['Name', 'Type', 'Brand', 'Supplier', 'SKU', 'Content', 'Images', 'Expire Date', 'Price', 'Discount']}
+                                header_array={['Item', 'Quantity', 'Purchased Date', 'Store', 'Supplier', 'Staff']}
                                 data_array={apiData}
-                                param='product'
+                                param='purchase'
                             />
                         </div>
 

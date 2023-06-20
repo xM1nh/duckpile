@@ -6,13 +6,17 @@ const useFetch = (url) => {
     const [serverErr, setServerErr] = useState(null)
 
     useEffect(() => {
-        setIsLoading(true)
         const fetchData = async () => {
+            setIsLoading(true)
             try {
-                const data = await fetch(url).then(res => res.json())
+                const res = await fetch(url)
+                if (!res.ok) throw new Error(res.statusText)
 
+                const data = await res.json()
                 setApiData(data)
+                
                 setIsLoading(false)
+                setServerErr(null)
             } catch (err) {
                 setServerErr(err)
                 setIsLoading(false)

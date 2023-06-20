@@ -1,5 +1,30 @@
-.container.summary {
+.container.summary.success {
+    display: grid;
+    grid-template-rows: 6fr 3fr 2fr;
+    outline: 1px solid black;
+    padding: 0% 5% 0 5%
+}
+
+.container-data.value.summary {
     display: flex;
-    flex-direction: column;
-    outline: 1px solid black
+    font-size: 4.5em;
+    font-weight: bold;
+    align-items:end;
+}
+
+.container-data.key.summary {
+    display: flex;
+    font-size: 1.5em;
+}
+
+.container-button.summary {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    border-top: 1px solid black;
+}
+
+.container-button.summary > p {
+    font-size: 1.1em;
 }

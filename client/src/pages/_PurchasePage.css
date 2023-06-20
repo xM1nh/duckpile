@@ -1,0 +1,20 @@
+.page.purchase_list main {
+    grid-template-rows: 1fr 4fr;
+}
+
+.purchase-table-title {
+    text-align: center;
+    padding: 20px;
+    font-size: 2em;
+}
+
+.purchase-table {
+    margin: 10px;
+}
+
+.purchase-table-content {
+    outline: 1px solid black;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    min-height: 500px;
+}
