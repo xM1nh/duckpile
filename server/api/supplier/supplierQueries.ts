@@ -1,4 +1,8 @@
-export const get_all_suppliers = 'SELECT * FROM suppliers'
+export const get_all_suppliers = `SELECT 
+                                    name,
+                                    street || ', ' || city || ', ' || state as address,
+                                    phone_number, id
+                                FROM suppliers`
 export const sort = 'SELECT * FROM suppliers ORDER BY $1 $2'
 export const supplier_detail = 'SELECT * FROM suppliers WHERE id = $1'
 export const supplier_create = 'INSERT INTO suppliers (name, street, city, state, phone_number) values ($1, $2, $3, $4, $5)'
