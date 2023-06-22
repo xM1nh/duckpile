@@ -17,8 +17,10 @@ export const paginated_product_get = asyncHandler(async (req, res, next) => {
 
 export const product_detail = asyncHandler(async (req, res, next) => {
     const product_id = parseInt(req.params.id)
-    const product = await pool.query(product_queries.product_detail, [product_id])
-    res.status(200).json(product.rows)
+    const general = await pool.query(product_queries.product_general_detail, [product_id])
+    const sales = await pool.query(product_queries.product_sales_detail, [product_id])
+    const purchase = await pool.query(product_queries.product_purchase_detail, [product_id])
+    res.status(200).json({general: general.rows, sales: sales.rows, purchases: purchase.rows})
 })
 
 export const product_create_get = asyncHandler(async (req, res, next) => {
