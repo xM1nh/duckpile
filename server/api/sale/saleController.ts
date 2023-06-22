@@ -3,7 +3,10 @@ import * as sale_queries from './saleQueries'
 import asyncHandler from 'express-async-handler'
 
 export const sale_list = asyncHandler(async (req, res, next) => {
-    const sales = await pool.query(sale_queries.get_all_sales)
+    const page = parseInt(req.params.page)
+    const limit = parseInt(req.params.limit)
+    const offset = (page - 1) * limit
+    const sales = await pool.query(sale_queries.get_all_sales, [limit, offset])
     res.status(200).json(sales.rows)
 })
 
