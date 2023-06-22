@@ -1,4 +1,4 @@
-import PurchaseNavbar from '../components/navbar/PurchaseNavbar'
+import MainNavbar from '../components/navbar/MainNavbar'
 import Pagination from "../components/pagination/Pagination"
 import useFetch from '../hooks/useFetch'
 import usePagination from "../hooks/usePagination"
@@ -18,7 +18,7 @@ const ProductListPage = () => {
 
     return (
         <div className='page purchase'>
-            <PurchaseNavbar />
+            <MainNavbar />
 
             <main>
                 <section className="summary">
@@ -31,9 +31,8 @@ const ProductListPage = () => {
                         <div className="purchase-table-title">Recent Purchases</div>
                         <div className="purchase-table-content">
                             <Table 
-                                header_array={['Item', 'Quantity', 'Purchased Date', 'Store', 'Supplier', 'Staff']}
+                                header_array={['Purchased Date', 'Item', 'Quantity', 'Store', 'Supplier', 'Staff']}
                                 data_array={apiData}
-                                param='purchase'
                             />
                         </div>
 

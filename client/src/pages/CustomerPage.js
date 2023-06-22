@@ -10,7 +10,6 @@ const itemNumPerPage = 10
 
 const CustomerPage = () => {
     const {isLoading, apiData, serverErr} = useFetch('/api/v1/customers')
-    console.log(apiData)
 
     const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(itemCount, itemNumPerPage)
 

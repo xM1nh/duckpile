@@ -1,4 +1,4 @@
-import ProductNavbar from "../components/navbar/ProductNavbar"
+import MainNavbar from "../components/navbar/MainNavbar"
 import Pagination from "../components/pagination/Pagination"
 import useFetch from '../hooks/useFetch'
 import usePagination from "../hooks/usePagination"
@@ -18,7 +18,7 @@ const ProductListPage = () => {
 
     return (
         <div className='page product_list'>
-            <ProductNavbar />
+            <MainNavbar />
             <main>
                 <section className="summary">
                     <SummaryContainer />

@@ -1,4 +1,4 @@
-import SaleNavbar from '../components/navbar/SaleNavbar'
+import MainNavbar from '../components/navbar/MainNavbar'
 import Pagination from "../components/pagination/Pagination"
 import useFetch from '../hooks/useFetch'
 import usePagination from "../hooks/usePagination"
@@ -11,14 +11,14 @@ const itemCount = 9
 
 const ProductListPage = () => { 
     const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(itemCount, itemNumPerPage)
-
+    
     var url = `/api/v1/sales/${currentPage}/${itemNumPerPage}`
 
     const {isLoading, apiData, serverErr} = useFetch(url)
 
     return (
         <div className='page sales'>
-            <SaleNavbar />
+            <MainNavbar />
 
             <main>
                 <section className="summary">
@@ -31,9 +31,8 @@ const ProductListPage = () => {
                         <div className="sales-table-title">Recent sales</div>
                         <div className="sales-table-content">
                             <Table 
-                                header_array={['Item', 'Quantity', 'salesd Date', 'Store', 'Supplier', 'Staff']}
+                                header_array={['Sale Date', 'Item', 'Quantity', 'Customer', 'Store', 'Staff']}
                                 data_array={apiData}
-                                param='sales'
                             />
                         </div>
 

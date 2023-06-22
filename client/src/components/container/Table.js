@@ -25,7 +25,7 @@ const Table = ({param, header_array, data_array}) => {
                                     if (key === 'name') return (
                                         <td key={i}><Link to={`/product/${object.id}`}>{object[key]}</Link></td>
                                     )
-                                     if (key !== 'id') return (
+                                    if (key !== 'id') return (
                                         <td key={i} id={object.id}>{object[key]}</td>
                                     )
                                 })

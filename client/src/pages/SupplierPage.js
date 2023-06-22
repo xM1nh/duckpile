@@ -3,12 +3,15 @@ import './_SupplierPage.css'
 import Table from '../components/container/Table'
 import Pagination from '../components/pagination/Pagination'
 import usePagination from '../hooks/usePagination'
+import useFetch from '../hooks/useFetch'
 
 const itemCount = 1000
 const itemNumPerPage = 10
 
 const SupplierPage = () => {
     const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(itemCount, itemNumPerPage)
+
+    const {isLoading, apiData, serverErr} = useFetch('/api/v1/suppliers')
 
     return (
         <div className="page supplier">
@@ -18,7 +21,7 @@ const SupplierPage = () => {
                 <div className='supplier-list'>
                     <div className='supplier-list title'>Supplier List</div>
                     <div className='supplier-list table'>
-                        <Table header_array={['table']} data_array={[]}/>
+                        <Table header_array={['Name', 'Address', 'Phone Number']} data_array={apiData}/>
                     </div>
                     <Pagination 
                         currentPage={currentPage} 
