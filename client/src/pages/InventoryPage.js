@@ -24,13 +24,22 @@ const InventoryPage = () => {
                     </div>
                     <div className='inventory-detail'>
                         <div>
-                            <Table header_array={['Store', 'Item', 'Quantity']} data_array={store1} />
+                            <Table 
+                                header_array={['Store', 'Item', 'Quantity']} 
+                                data_array={store1} 
+                                mainData='inventory'/>
                         </div>
                         <div>
-                            <Table header_array={['Store', 'Item', 'Quantity']} data_array={store2} />
+                            <Table 
+                                header_array={['Store', 'Item', 'Quantity']} 
+                                data_array={store2}
+                                mainData='inventory' />
                         </div>
                         <div>
-                        <Table header_array={['Store', 'Item', 'Quantity']} data_array={store3} />
+                            <Table 
+                                header_array={['Store', 'Item', 'Quantity']} 
+                                data_array={store3} 
+                                mainData='inventory'/>
                         </div>
                     </div>
                 </main>

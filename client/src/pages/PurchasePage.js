@@ -33,6 +33,7 @@ const ProductListPage = () => {
                             <Table 
                                 header_array={['Purchased Date', 'Item', 'Quantity', 'Store', 'Supplier', 'Staff']}
                                 data_array={apiData}
+                                mainData='purchase'
                             />
                         </div>
 

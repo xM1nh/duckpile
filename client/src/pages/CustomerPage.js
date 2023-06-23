@@ -21,7 +21,10 @@ const CustomerPage = () => {
                 <div className='customer-list'>
                     <div className='customer-list title'>Customer List</div>
                     <div className='customer-list table'>
-                        <Table header_array={['Name', 'Address', 'Phone Number']} data_array={apiData}/>
+                        <Table 
+                            header_array={['Name', 'Address', 'Phone Number']} 
+                            data_array={apiData}
+                            mainData='customer'/>
                     </div>
                     <Pagination 
                         currentPage={currentPage} 

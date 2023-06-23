@@ -29,8 +29,9 @@ const ProductListPage = () => {
                     <div className="product-table">
                         <div className="product-table-title">All Products</div>
                         <div className="product-table-content">
-                            <Table 
-                                header_array={['Name', 'Type', 'Brand', 'Supplier', 'SKU', 'Content', 'Images', 'Expire Date', 'Price', 'Discount']}
+                            <Table
+                                mainData='product' 
+                                header_array={['Image', 'Name', 'Type', 'Brand', 'Supplier', 'SKU', 'Content', 'Expire Date', 'Price', 'Discount']}
                                 data_array={apiData}
                             />
                         </div>

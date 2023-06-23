@@ -21,7 +21,10 @@ const SupplierPage = () => {
                 <div className='supplier-list'>
                     <div className='supplier-list title'>Supplier List</div>
                     <div className='supplier-list table'>
-                        <Table header_array={['Name', 'Address', 'Phone Number']} data_array={apiData}/>
+                        <Table 
+                            header_array={['Name', 'Address', 'Phone Number']} 
+                            data_array={apiData}
+                            mainData='supplier'/>
                     </div>
                     <Pagination 
                         currentPage={currentPage} 
