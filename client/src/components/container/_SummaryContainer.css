@@ -1,28 +1,21 @@
 .container.summary.success {
     display: grid;
-    grid-template-rows: 6fr 3fr 2fr;
+    grid-template-rows: 6fr 4fr;
     outline: 1px solid black;
     padding: 0% 5% 0 5%
 }
 
 .container-data.value.summary {
     display: flex;
-    font-size: 4.5em;
+    font-size: 5em;
     font-weight: bold;
     align-items:end;
+    border-bottom: 1px solid rgba(0,0,0,0.3);
 }
 
 .container-data.key.summary {
     display: flex;
-    font-size: 1.5em;
-}
-
-.container-button.summary {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    border-top: 1px solid black;
+    font-size: 2.5em;
 }
 
 .container-button.summary > p {
