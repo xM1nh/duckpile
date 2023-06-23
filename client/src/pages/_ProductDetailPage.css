@@ -49,3 +49,19 @@
     font-size: 1.5em;
     padding: 1%;
 }
+
+.product-detail.summary .inventory {
+    font-size: 0.4em;
+}
+
+.product-detail.summary .inventory {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    justify-items: center;
+    align-self: center;
+} 
+
+.product-detail.summary .inventory div {
+    text-align: center;
+}
