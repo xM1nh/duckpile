@@ -1,57 +1,65 @@
 export const get_all_products = `SELECT 
-                                    products.name,
+                                    products.name as product_name,
                                     products.type,
                                     products.brand,
-                                    suppliers.name as supplier,
+                                    suppliers.name as supplier_name,
                                     products.sku,
                                     products.content,
                                     products.images,
-                                    products.expired_date,
+                                    to_char(products.expired_date, 'MM-DD-YYYY') as expired_date,
                                     products.price,
                                     products.discount,
-                                    products.id
+                                    products.id as product_id,
+                                    suppliers.id as supplier_id
                                 FROM products
                                     INNER JOIN suppliers ON products.supplier = suppliers.id`
 export const get_product_count = 'SELECT count(*) FROM products'
 export const get_paginated_products = `SELECT 
-                                        products.name,
+                                        products.images,
+                                        products.name as product_name,
                                         products.type,
                                         products.brand,
-                                        suppliers.name as supplier,
+                                        suppliers.name as supplier_name,
                                         products.sku,
                                         products.content,
-                                        products.images,
-                                        products.expired_date,
+                                        to_char(products.expired_date, 'MM-DD-YYYY') as expired_date,
                                         products.price,
                                         products.discount,
-                                        products.id
+                                        products.id as product_id,
+                                        suppliers.id as supplier_id
                                     FROM products
                                         INNER JOIN suppliers ON products.supplier = suppliers.id 
+                                    ORDER BY products.name
                                     LIMIT $1 OFFSET $2`
 export const sort_all_products = 'SELECT * FROM products ORDER BY $1 $2'
 export const product_general_detail = `SELECT 
-                                            products.name,
+                                            products.name as product_name,
                                             products.type,
                                             products.brand,
-                                            suppliers.name as supplier,
+                                            suppliers.name as supplier_name,
                                             products.sku,
                                             products.content,
                                             products.images,
-                                            products.expired_date,
+                                            to_char(products.expired_date, 'MM-DD-YYYY') as expired_date,
                                             products.price,
                                             products.discount,
-                                            products.id
+                                            products.id as product_id,
+                                            suppliers.id as supplier_id
                                         FROM products
                                             INNER JOIN suppliers ON products.supplier = suppliers.id 
                                         WHERE products.id=$1`
 export const product_sales_detail = `SELECT 
-                                        sales.sale_date,
+                                        sales.id as sale_name,
+                                        to_char(sales.sale_date, 'MM-DD-YYYY') as sales_date,
                                         sales.quantity,
-                                        customers.first_name || ' ' || customers.last_name as customers,
+                                        customers.first_name || ' ' || customers.last_name as customer_name,
                                         sales.payment_method,
-                                        stores.store_name,
+                                        stores.store_name as store_name,
                                         staffs.first_name || ' ' || staffs.last_name as staff,
-                                        products.id as id
+                                        products.id as product_id,
+                                        customers.id as customer_id,
+                                        stores.id as store_id,
+                                        sales.id as sale_id
                                     FROM sales
                                         INNER JOIN products ON sales.item = products.id
                                         INNER JOIN stores ON sales.store = stores.id
@@ -59,12 +67,16 @@ export const product_sales_detail = `SELECT
                                         LEFT JOIN customers ON sales.customer = customers.id
                                     WHERE sales.item = $1
                                     ORDER BY sale_date DESC`
-export const product_purchase_detail = `SELECT 
-                                            purchases.purchase_date,
+export const product_purchase_detail = `SELECT
+                                            purchases.id as purchase_name,
+                                            to_char(purchases.purchase_date, 'MM-DD-YYYY') as purchases_date,
                                             purchases.quantity,
-                                            stores.store_name,
-                                            suppliers.name,
-                                            staffs.first_name || ' ' || staffs.last_name as staff
+                                            stores.store_name as store_name,
+                                            suppliers.name as supplier_name,
+                                            staffs.first_name || ' ' || staffs.last_name as staff,
+                                            stores.id as store_id,
+                                            suppliers.id as supplier_id,
+                                            purchases.id as purchase_id
                                         FROM purchases
                                             INNER JOIN products ON purchases.item = products.id
                                             INNER JOIN stores ON purchases.store = stores.id
@@ -72,5 +84,25 @@ export const product_purchase_detail = `SELECT
                                             INNER JOIN suppliers ON purchases.supplier = suppliers.id
                                         WHERE purchases.item = $1
                                         ORDER BY purchase_date DESC`
+export const product_inventory_detail = `SELECT
+                                            products.name as product_name,
+                                            stores.store_name as store_name,
+                                            SUM (inventory.quantity)
+                                        FROM inventory
+                                            INNER JOIN products ON inventory.item = products.id
+                                            INNER JOIN stores ON inventory.store = stores.id
+                                        WHERE inventory.item = $1
+                                        GROUP BY products.name, stores.store_name`
+export const product_show_detail = `SELECT 
+                                        show.name AS show,
+                                        to_char(show.date, 'MM-DD-YYYY') as date,
+                                        products.name as product_name,
+                                        show.price,
+                                        show.content,
+                                        products.id as product_id
+                                    FROM show
+                                        INNER JOIN products ON show.item = products.id
+                                    WHERE show.item = $1
+                                    ORDER BY show.date DESC`
 export const product_create = 'INSERT INTO products (name, type, brand, supplier, sku, content, images, expired_date, price, discount) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)'
 export const product_update = ''

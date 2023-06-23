@@ -20,7 +20,9 @@ export const product_detail = asyncHandler(async (req, res, next) => {
     const general = await pool.query(product_queries.product_general_detail, [product_id])
     const sales = await pool.query(product_queries.product_sales_detail, [product_id])
     const purchase = await pool.query(product_queries.product_purchase_detail, [product_id])
-    res.status(200).json({general: general.rows, sales: sales.rows, purchases: purchase.rows})
+    const inventory = await pool.query(product_queries.product_inventory_detail, [product_id])
+    const show = await pool.query(product_queries.product_show_detail, [product_id])
+    res.status(200).json({general: general.rows[0], inventory: inventory.rows, sales: sales.rows, purchases: purchase.rows, show: show.rows[0]})
 })
 
 export const product_create_get = asyncHandler(async (req, res, next) => {

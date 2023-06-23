@@ -1,7 +1,8 @@
 export const get_all_suppliers = `SELECT 
-                                    name,
+                                    name as supplier_name,
                                     street || ', ' || city || ', ' || state as address,
-                                    phone_number, id
+                                    phone_number,
+                                    suppliers.id as supplier_id
                                 FROM suppliers`
 export const sort = 'SELECT * FROM suppliers ORDER BY $1 $2'
 export const supplier_detail = 'SELECT * FROM suppliers WHERE id = $1'

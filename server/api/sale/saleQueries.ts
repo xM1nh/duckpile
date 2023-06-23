@@ -1,11 +1,14 @@
 export const get_all_sales = `SELECT 
                                 sales.sale_date, 
-                                products.name, 
+                                products.name as product_name, 
                                 sales.quantity, 
-                                customers.first_name || ' ' || customers.last_name as customer, 
-                                stores.store_name, 
+                                customers.first_name || ' ' || customers.last_name as customer_name, 
+                                stores.store_name as store_name, 
                                 staffs.first_name || ' ' || staffs.last_name as staff,
-                                products.id as id 
+                                products.id as product_id,
+                                customers.id as customer_id,
+                                stores.id as store_id,
+                                sales.id as sale_id
                             FROM sales
                                 INNER JOIN products ON sales.item = products.id
                                 INNER JOIN stores ON sales.store = stores.id

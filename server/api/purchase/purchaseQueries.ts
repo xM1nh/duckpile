@@ -1,11 +1,14 @@
 export const get_all_purchases = `SELECT 
-                                    purchases.purchase_date,
-                                    products.name,
+                                    to_char(purchases.purchase_date, 'MM-DD-YYYY') as purchase_date,
+                                    products.name as product_name,
                                     purchases.quantity,
-                                    stores.store_name,
-                                    suppliers.name as supplier,
+                                    stores.store_name as store_name,
+                                    suppliers.name as supplier_name,
                                     staffs.first_name || ' ' || staffs.last_name as staff,
-                                    products.id as id
+                                    products.id as product_id,
+                                    stores.id as store_id,
+                                    suppliers.id as supplier_id,
+                                    purchases.id as purchase_id
                                 FROM purchases
                                     INNER JOIN products ON purchases.item = products.id
                                     INNER JOIN stores ON purchases.store = stores.id
