@@ -1,0 +1,52 @@
+.show-item-container > * {
+    padding: 2%;
+    font-weight: bold;
+}
+
+.show-item-container {
+    outline: 1px solid black;
+    height: 100%;
+    display: grid;
+    grid-template-areas: 
+        'item-name show-date show-date'
+        'item-name show-name show-name'
+        'item-image show-price show-price'
+        'item-image show-price show-price'
+        'item-image show-content show-content'
+        'item-image show-content show-content';
+}
+
+.show-item-container .item-name {
+    grid-area: item-name;
+    display: flex;
+    justify-content: center;
+    border-right: 1px solid black;
+}
+
+.show-item-container .item-image {
+    grid-area: item-image;
+    border-right: 1px solid black;
+}
+
+.show-item-container .show-name {
+    grid-area: show-name;
+    border-bottom: 1px solid black;
+}
+
+.show-item-container .show-date {
+    grid-area: show-date;
+    font-size: 1.5em;
+    border-bottom: 1px solid black;
+}
+
+.show-item-container .show-price {
+    grid-area: show-price;
+    font-size: 2em;
+    border-bottom: 1px solid black;
+}
+
+.show-item-container .show-content {
+    grid-area: show-content;
+    overflow-wrap: break-word;
+    overflow-y: scroll;
+}
