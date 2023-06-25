@@ -2,10 +2,11 @@ import SummaryContainer from '../components/container/SummaryContainer'
 import useFetch from '../hooks/useFetch'
 import { useParams } from 'react-router-dom'
 import './_ProductDetailPage.css'
-import ProductNavbar from '../components/navbar/ProductNavbar'
 import Table from '../components/container/Table'
 import Spinner from '../components/spinner/Spinner'
 import ShowItemContainer from '../components/container/ShowItemContainer'
+import ButtonContainer from '../components/buttons/ButtonContainer'
+import MainNavbar from '../components/navbar/MainNavbar'
 
 const ProductDetailPage = () => {
     const {id} = useParams()
@@ -29,7 +30,7 @@ const ProductDetailPage = () => {
 
         return (
             <div className="page product-detail-page">
-                <ProductNavbar />
+                <MainNavbar />
                 
                 <main>
                     <div className="product-detail info">
@@ -73,6 +74,15 @@ const ProductDetailPage = () => {
                                 />
                         </div>
                     </div>
+
+                    <ButtonContainer 
+                        add={true}
+                        edit={true}
+                        del={true}
+                        addURL='/product/add'
+                        editURL={`/product/${id}/edit`}
+                        delURL={`/product/${id}/delete`}
+                    />
                 </main>
             </div>
         )

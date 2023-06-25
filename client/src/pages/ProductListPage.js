@@ -5,6 +5,7 @@ import usePagination from "../hooks/usePagination"
 import './_ProductListPage.css'
 import Table from "../components/container/Table"
 import SummaryContainer from "../components/container/SummaryContainer"
+import ButtonContainer from "../components/buttons/ButtonContainer"
 
 const itemNumPerPage = 10
 const itemCount = 9
@@ -45,6 +46,8 @@ const ProductListPage = () => {
                         />
                     </div>
                 </section>
+            
+            <ButtonContainer add={true} addURL='/product/add'/>
             </main>
         </div>
     )

@@ -5,6 +5,7 @@ import usePagination from "../hooks/usePagination"
 import './_SalesPage.css'
 import Table from "../components/container/Table"
 import SummaryContainer from '../components/container/SummaryContainer'
+import ButtonContainer from '../components/buttons/ButtonContainer'
 
 const itemNumPerPage = 10
 const itemCount = 9
@@ -31,7 +32,7 @@ const ProductListPage = () => {
                         <div className="sales-table-title">Recent sales</div>
                         <div className="sales-table-content">
                             <Table 
-                                header_array={['Sale Date', 'Item', 'Quantity', 'Customer', 'Store', 'Staff']}
+                                header_array={['Code', 'Sale Date', 'Item', 'Quantity', 'Customer', 'Store', 'Staff']}
                                 data_array={apiData}
                                 mainData='sale'
                             />
@@ -46,6 +47,8 @@ const ProductListPage = () => {
                         />
                     </div>
                 </section>
+
+                <ButtonContainer add={true} addURL='/sale/add' />
             </main>
         </div>
     )

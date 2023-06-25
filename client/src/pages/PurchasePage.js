@@ -5,6 +5,7 @@ import usePagination from "../hooks/usePagination"
 import './_PurchasePage.css'
 import Table from "../components/container/Table"
 import SummaryContainer from '../components/container/SummaryContainer'
+import ButtonContainer from '../components/buttons/ButtonContainer'
 
 const itemNumPerPage = 10
 const itemCount = 9
@@ -31,7 +32,7 @@ const ProductListPage = () => {
                         <div className="purchase-table-title">Recent Purchases</div>
                         <div className="purchase-table-content">
                             <Table 
-                                header_array={['Purchased Date', 'Item', 'Quantity', 'Store', 'Supplier', 'Staff']}
+                                header_array={['Code', 'Purchased Date', 'Item', 'Quantity', 'Store', 'Supplier', 'Staff']}
                                 data_array={apiData}
                                 mainData='purchase'
                             />
@@ -46,6 +47,8 @@ const ProductListPage = () => {
                         />
                     </div>
                 </section>
+
+                <ButtonContainer add={true} addURL='/purchase/add' />
             </main>
         </div>
     )
