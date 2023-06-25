@@ -1,4 +1,5 @@
 export const get_all_purchases = `SELECT 
+                                    purchases.id as purchase_name,
                                     to_char(purchases.purchase_date, 'MM-DD-YYYY') as purchase_date,
                                     products.name as product_name,
                                     purchases.quantity,

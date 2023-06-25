@@ -1,4 +1,5 @@
 export const get_all_sales = `SELECT 
+                                sales.id as sale_name,
                                 sales.sale_date, 
                                 products.name as product_name, 
                                 sales.quantity, 
