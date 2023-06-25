@@ -1,0 +1,16 @@
+.material-button {
+    width: fit-content;
+    height: auto;
+    border-radius: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: gray;
+    margin: 1px
+}
+
+.add-data {
+}
+
+.edit-data {
+}

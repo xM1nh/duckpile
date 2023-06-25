@@ -1,0 +1,8 @@
+.material-button-container {
+    position: absolute;
+    display: flex;
+    top: 90%;
+    left: 90%;
+    gap: 5px;
+    direction: rtl;
+}
