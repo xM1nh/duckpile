@@ -47,7 +47,7 @@ const ProductListPage = () => {
                     </div>
                 </section>
             
-            <ButtonContainer add={true} addURL='/product/add'/>
+            <ButtonContainer create={true} createURL='/product/create'/>
             </main>
         </div>
     )

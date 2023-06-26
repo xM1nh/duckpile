@@ -79,7 +79,7 @@ const ProductDetailPage = () => {
                         add={true}
                         edit={true}
                         del={true}
-                        addURL='/product/add'
+                        addURL='/product/create'
                         editURL={`/product/${id}/edit`}
                         delURL={`/product/${id}/delete`}
                     />
