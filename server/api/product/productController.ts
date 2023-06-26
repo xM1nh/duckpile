@@ -1,3 +1,4 @@
+import { body, validationResult } from 'express-validator'
 import pool from '../../database'
 import * as product_queries from './productQueries'
 import asyncHandler from 'express-async-handler'
@@ -25,13 +26,56 @@ export const product_detail = asyncHandler(async (req, res, next) => {
     res.status(200).json({general: general.rows[0], inventory: inventory.rows, sales: sales.rows, purchases: purchase.rows, show: show.rows[0]})
 })
 
-export const product_create_get = asyncHandler(async (req, res, next) => {
-    res.send('not implemented: product create get')
-})
+export const product_create_post = [
+    body('name', 'Product name must not be empty.')
+        .trim()
+        .isLength({min: 1})
+        .escape(),
+    body('type')
+        .trim()
+        .escape(),
+    body('brand')
+        .trim()
+        .escape(),
+    body('sku')
+        .trim()
+        .escape(),
+    body('price', 'Product price must not be empty.')
+        .trim()
+        .isLength({min: 1})
+        .escape(),
+    body('discount')
+        .trim()
+        .escape(),
+    body('expDate')
+        .trim()
+        .escape(),
+    body('content')
+        .trim()
+        .escape(),
+        
+    asyncHandler(async (req, res, next) => {
+        const errors = validationResult(req)
 
-export const product_create_post = asyncHandler(async (req, res, next) => {
-    res.send('not implemented: product create post')
-})
+        const product = {
+            name: req.body.name,
+            type: req.body.type,
+            brand: req.body.brand,
+            sku: req.body.sku,
+            price: req.body.price,
+            discount: req.body.discount,
+            supplier: req.body.supplier,
+            expDate: req.body.expDate,
+            content: req.body.content
+        }
+
+        if(!errors.isEmpty()) {
+            res.status(400).json({ errors })
+        } else {
+            console.log(product)
+        }
+    })
+]
 
 export const product_delete_get = asyncHandler(async (req, res, next) => {
     res.send('not implemented: product delete get')
