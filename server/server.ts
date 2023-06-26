@@ -1,6 +1,7 @@
-require('dotenv').config({path:'../.env'})
+require('dotenv').config()
 
 import express from 'express'
+import multer from 'multer'
 
 const app = express()
 const port = 3001
