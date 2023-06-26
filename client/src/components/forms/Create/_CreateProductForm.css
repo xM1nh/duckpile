@@ -1,0 +1,111 @@
+.form-container {
+    margin-left: 200px;
+    padding: 1% 5% 1% 5%;
+    height: 100%;
+}
+
+form {
+    display: grid;
+    height: 100%;
+    grid-template-areas: 
+        'image image image'
+        'image image image'
+        'name name type'
+        'brand sku supp'
+        'price discount date'
+        'cont cont cont'
+        '. button .';
+    gap: 5px;
+}
+form > div {
+    margin: 5px;
+}
+
+form > div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.form-control.upload {
+    grid-area: image;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.main-image-container {
+    border: 1px solid black;
+    height: 300px;
+    width: 200px;
+    object-fit: fill;
+    padding: 5px;
+}
+
+.main-image-container > img {
+    width: 100%;
+    height: 100%;
+}
+
+.product-image-list {
+    border-top: 1px solid rgba(0,0,0,0.4);
+    border-bottom: 1px solid rgba(0,0,0,0.4);
+    display: flex;
+    gap: 5px;
+    height: 100px;
+    padding: 5px;
+    max-width: 50%;
+    overflow-x: scroll;
+}
+
+.product-image-list > img {
+    height: 100%;
+    width: 100px;
+    object-fit: contain;
+}
+
+#product-name {
+    grid-area: name
+}
+
+#product-type {
+    grid-area: type
+}
+
+#product-brand {
+    grid-area: brand
+}
+
+#product-sku {
+    grid-area: sku
+}
+
+.product-supplier {
+    grid-area: supp
+}
+
+select {
+    font-size: 1.5em;
+}
+
+#product-content {
+    grid-area: cont
+}
+
+#product-date {
+    grid-area: date
+}
+
+#product-price {
+    grid-area: price
+}
+
+#product-disc {
+    grid-area: discount
+}
+
+.product-create-submit {
+    grid-area: button;
+    font-size: 1.5em;
+    font-weight: bold;
+}
