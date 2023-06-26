@@ -1,15 +1,15 @@
-import AddData from "./AddData"
+import CreateData from "./CreateData"
 import EditData from "./EditData"
 import DeleteData from "./DeleteData"
 
 import './_ButtonContainer.css'
 
-const ButtonContainer = ({add, edit, del, addURL, editURL, delURL}) => {
+const ButtonContainer = ({create, edit, del, createURL, editURL, delURL}) => {
     return (
         <div className="material-button-container">
             <DeleteData isDisplay={del} url={delURL} />
             <EditData isDisplay={edit} url={editURL}/>
-            <AddData isDisplay={add} url={addURL}/>
+            <CreateData isDisplay={create} url={createURL}/>
         </div>
     )
 }

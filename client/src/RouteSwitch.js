@@ -8,7 +8,7 @@ import SalesPage from './pages/SalesPage'
 import InventoryPage from "./pages/InventoryPage";
 import CustomerPage from "./pages/CustomerPage";
 import SupplierPage from "./pages/SupplierPage";
-import CreateBookForm from "./components/forms/Create/CreateBookForm";
+import CreateProductForm from "./components/forms/Create/CreateProductForm";
 
 
 const RouteSwitch = () => {
@@ -18,7 +18,7 @@ const RouteSwitch = () => {
                 <Route path='/' element={<App />} />
                 <Route path='/products' element={<ProductListPage />} />
                 <Route path='/product/:id' element={<ProductDetailPage />} />
-                <Route path='/product/add' element={<CreateBookForm />}/>
+                <Route path='/product/create' element={<CreateProductForm />}/>
                 <Route path='/purchases' element={<PurchasePage />} />
                 <Route path='/sales' element={<SalesPage />} />
                 <Route path='/inventory' element={<InventoryPage />} />
