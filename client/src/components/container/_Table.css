@@ -21,6 +21,10 @@ th, td {
     word-wrap: break-word;
 }
 
+td > img {
+    width: 90%
+}
+
 tbody {
     margin-top: 100px;
 }
