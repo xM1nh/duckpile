@@ -36,6 +36,11 @@ const Table = ({mainData, header_array, data_array}) => {
                                             <td key={i}><Link to={`/${param}/${object[objectID]}`}>{object[key]}</Link></td>
                                         )
                                     }
+                                    if (key.includes('image') && object[key]) {
+                                        return (
+                                            <td key={i} id={object.id}><img src={[object[key]]} alt='productImg'></img></td>
+                                        )
+                                    }
                                     if (!key.includes('id')) return (
                                         <td key={i} id={object.id}>{object[key]}</td>
                                     )
