@@ -3,18 +3,22 @@ import './_CreateProductForm.css'
 import useFetch from '../../../hooks/useFetch'
 import FormInput from '../FormInput'
 import MainNavBar from '../../navbar/MainNavbar'
+import { useNavigate } from 'react-router-dom'
 
 const CreateProductForm = () => {
     const {isLoading, apiData, serverErr} = useFetch('/api/v1/suppliers')
-    const [images, setImages] = useState([])
+    const navigate = useNavigate()
     const [mainImage, setMainImage] = useState(null)
+    const [blob, setBlob] = useState([])
     const [err, setErr] = useState(null)
+
+    const [imageData, setImageData] = useState([])
     const [info, setInfo] = useState({
         name: '',
         type: '',
         brand: '',
         sku: '',
-        supplier: '',
+        supplier: 1, //Default value for supplier is 1
         price: '',
         discount: '',
         expDate: '',
@@ -23,14 +27,16 @@ const CreateProductForm = () => {
 
 
     const handleImageInput = (e) => {
-        const temp = []
+        const dataRaw = []
+        const dataBlob = []
 
         for (let i = 0; i < e.target.files.length; i++) {
-            temp.push(URL.createObjectURL(e.target.files[i]))
+            dataRaw.push(e.target.files[i])
+            dataBlob.push(URL.createObjectURL(e.target.files[i]))
         }
-
-        setMainImage(temp[0])
-        setImages(images => [...images, ...temp])
+        setMainImage(dataBlob[0])
+        setBlob([...dataBlob])
+        setImageData([...dataRaw])
     }
 
     const handleImageClick = (e) => {
@@ -38,9 +44,8 @@ const CreateProductForm = () => {
     }
 
     const handleChange = (e) => {
-        const { name, value} = e.target
-
-        setInfo(prevInfo => ({
+        const { name, value } = e.target
+        setInfo((prevInfo) => ({
             ...prevInfo,
             [name]: value
         }))
@@ -48,13 +53,17 @@ const CreateProductForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-
+        const formData = new FormData();
+        imageData.forEach(img => {
+            formData.append('images', img)
+        })
+            
         fetch('/api/v1/products/product/create', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type':'application/json'
             },
-            body: JSON.stringify(info)
+            body: JSON.stringify(info),
         })
         .then(res => res.json())
         .then(data => {
@@ -62,20 +71,66 @@ const CreateProductForm = () => {
                 setErr(data.errors)
                 console.log(err)
             }
-            else console.log('Pog')
-        }).catch(err => console.error('Error submitting:', err))
+            else if (data.message === 'Success') {
+                return data.productID
+            }
+        })
+        .then(productID => {
+            fetch(`/api/v1/uploads/${productID}/image/create`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                if (data.errors) {
+                    setErr(data.errors)
+                    console.log(err)
+                }
+                else if (data.message === 'Success') {
+                    e.target.reset()
+                    setMainImage(null)
+                    setBlob([])
+                    setInfo({
+                        name: '',
+                        type: '',
+                        brand: '',
+                        sku: '',
+                        supplier: 1,
+                        price: '',
+                        discount: '',
+                        expDate: '',
+                        content: '',
+                    })
+                    navigate(`/product/${productID}`)
+                }
+            })
+        }
+        ).catch(err => console.error('Error uploading:', err))
     }
 
     useEffect(() => {
         setMainImage(null)
-        setImages([])
+        setBlob([])
+        setInfo({
+            name: '',
+            type: '',
+            brand: '',
+            sku: '',
+            supplier: 1,
+            price: '',
+            discount: '',
+            expDate: '',
+            content: '',
+        })
+        setImageData([])
     }, [])
 
     return (
         <div className='page create-product'>
             <MainNavBar />
             <div className="form-container create-product">
-                <form onSubmit={handleSubmit}>
+                <form encType="multipart/form-data" onSubmit={handleSubmit}>
 
                     <div className='form-control upload'>
                         <div className='main-image-container'>
@@ -83,7 +138,7 @@ const CreateProductForm = () => {
                         </div>
 
                         <div className='product-image-list'>
-                            {images.map((url, i) => {
+                            {blob.map((url, i) => {
                                 return (
                                     <img onClick={handleImageClick} src={url} alt='...' key={i}></img>
                                     )
@@ -95,7 +150,7 @@ const CreateProductForm = () => {
                             <label htmlFor='product-image'>Choose product images:</label>
                             <input 
                                 type='file' multiple
-                                name='product-image'
+                                name='images'
                                 accept='image/*'
                                 onChange={handleImageInput}
                             ></input>
