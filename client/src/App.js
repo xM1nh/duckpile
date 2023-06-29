@@ -1,4 +1,4 @@
-import Homepage from "./pages/Homepage";
+import Homepage from "./pages/Home/Homepage";
 import './styles/index.css'
 import './components/navbar/_navbar.css'
 

@@ -1,16 +1,22 @@
-import SummaryContainer from '../components/container/SummaryContainer'
-import useFetch from '../hooks/useFetch'
+import SummaryContainer from '../../components/container/SummaryContainer'
+import useFetch from '../../hooks/useFetch'
 import { useParams } from 'react-router-dom'
 import './_ProductDetailPage.css'
-import Table from '../components/container/Table'
-import Spinner from '../components/spinner/Spinner'
-import ShowItemContainer from '../components/container/ShowItemContainer'
-import ButtonContainer from '../components/buttons/ButtonContainer'
-import MainNavbar from '../components/navbar/MainNavbar'
+import Table from '../../components/container/Table'
+import Spinner from '../../components/spinner/Spinner'
+import ShowItemContainer from '../../components/container/ShowItemContainer'
+import ButtonContainer from '../../components/buttons/ButtonContainer'
+import MainNavbar from '../../components/navbar/MainNavbar'
+import { useState } from 'react'
 
 const ProductDetailPage = () => {
     const {id} = useParams()
+    const [mainImg, setMainImg] = useState(null)
     const { isLoading, apiData, serverErr } = useFetch(`/api/v1/products/product/${id}`)
+
+    const handleImageClick = (e) => {
+        setMainImg(e.target.src)
+    }
 
     if (isLoading) return <Spinner />
     else if (serverErr) return (<div>404</div>)
@@ -27,14 +33,23 @@ const ProductDetailPage = () => {
                                 return sum + Number(curr.sum)
                                 }, 0)
                             : <Spinner />
-
         return (
             <div className="page product-detail-page">
                 <MainNavbar />
                 
                 <main>
                     <div className="product-detail info">
-                        <div className="product-detail-image-container">{apiData.general ? apiData.general.image : <Spinner />}</div>
+                        <div className="product-detail-image-container">
+                            <div className='image-list'>
+                                {apiData.images && 
+                                    apiData.images.map(image => {
+                                        return (
+                                            <img onClick={handleImageClick} src={image} alt=''></img>
+                                        )
+                                })}
+                            </div>
+                            <div className='main-image'><img src={mainImg} alt=''></img></div>
+                        </div>
                         <div className='product-detail-info-container'>
                             <div className="product-detail-name">{apiData.general ? apiData.general.product_name : <Spinner />}</div>
                             <div className='product-detail-content'>{apiData.general ? apiData.general.content : <Spinner />}</div>

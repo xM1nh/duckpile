@@ -1,14 +1,14 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
-import ProductListPage from "./pages/ProductListPage";
-import ProductDetailPage from "./pages/ProductDetailPage";
-import PurchasePage from './pages/PurchasePage'
-import SalesPage from './pages/SalesPage'
-import InventoryPage from "./pages/InventoryPage";
-import CustomerPage from "./pages/CustomerPage";
-import SupplierPage from "./pages/SupplierPage";
-import CreateProductForm from "./components/forms/Create/CreateProductForm";
+import ProductListPage from "./pages/Product/ProductListPage";
+import ProductDetailPage from "./pages/Product/ProductDetailPage";
+import PurchasePage from './pages/Purchase/PurchasePage'
+import SalesPage from './pages/Sale/SalesPage'
+import InventoryPage from "./pages/Inventory/InventoryPage";
+import CustomerPage from "./pages/Customer/CustomerPage";
+import SupplierPage from "./pages/Supplier/SupplierPage";
+import CreateProductForm from "./pages/Product/CreateProductForm";
 
 
 const RouteSwitch = () => {

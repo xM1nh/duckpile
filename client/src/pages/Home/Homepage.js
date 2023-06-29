@@ -1,5 +1,5 @@
-import MainNavBar from '../components/navbar/MainNavbar'
-import SummaryContainer from '../components/container/SummaryContainer'
+import MainNavBar from '../../components/navbar/MainNavbar'
+import SummaryContainer from '../../components/container/SummaryContainer'
 import './_Homepage.css'
 
 const Homepage = () => {

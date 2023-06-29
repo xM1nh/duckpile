@@ -1,24 +1,24 @@
-import MainNavbar from '../components/navbar/MainNavbar'
-import Pagination from "../components/pagination/Pagination"
-import useFetch from '../hooks/useFetch'
-import usePagination from "../hooks/usePagination"
-import './_SalesPage.css'
-import Table from "../components/container/Table"
-import SummaryContainer from '../components/container/SummaryContainer'
-import ButtonContainer from '../components/buttons/ButtonContainer'
+import MainNavbar from '../../components/navbar/MainNavbar'
+import Pagination from "../../components/pagination/Pagination"
+import useFetch from '../../hooks/useFetch'
+import usePagination from "../../hooks/usePagination"
+import './_PurchasePage.css'
+import Table from "../../components/container/Table"
+import SummaryContainer from '../../components/container/SummaryContainer'
+import ButtonContainer from '../../components/buttons/ButtonContainer'
 
 const itemNumPerPage = 10
 const itemCount = 9
 
 const ProductListPage = () => { 
     const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(itemCount, itemNumPerPage)
-    
-    var url = `/api/v1/sales/${currentPage}/${itemNumPerPage}`
+
+    var url = `/api/v1/purchases/${currentPage}/${itemNumPerPage}`
 
     const {isLoading, apiData, serverErr} = useFetch(url)
 
     return (
-        <div className='page sales'>
+        <div className='page purchase'>
             <MainNavbar />
 
             <main>
@@ -27,14 +27,14 @@ const ProductListPage = () => {
                     <SummaryContainer />
                     <SummaryContainer />
                 </section>
-                <section className="recent-sales">
-                    <div className="sales-table">
-                        <div className="sales-table-title">Recent sales</div>
-                        <div className="sales-table-content">
+                <section className="recent-purchase">
+                    <div className="purchase-table">
+                        <div className="purchase-table-title">Recent Purchases</div>
+                        <div className="purchase-table-content">
                             <Table 
-                                header_array={['Code', 'Sale Date', 'Item', 'Quantity', 'Customer', 'Store', 'Staff']}
+                                header_array={['Code', 'Purchased Date', 'Item', 'Quantity', 'Store', 'Supplier', 'Staff']}
                                 data_array={apiData}
-                                mainData='sale'
+                                mainData='purchase'
                             />
                         </div>
 
@@ -48,7 +48,7 @@ const ProductListPage = () => {
                     </div>
                 </section>
 
-                <ButtonContainer add={true} addURL='/sale/add' />
+                <ButtonContainer add={true} addURL='/purchase/add' />
             </main>
         </div>
     )

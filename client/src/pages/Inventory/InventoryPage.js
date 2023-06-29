@@ -1,9 +1,9 @@
 import './_InventoryPage.css'
-import MainNavbar from '../components/navbar/MainNavbar'
-import SummaryContainner from '../components/container/SummaryContainer'
-import Spinner from '../components/spinner/Spinner'
-import Table from '../components/container/Table'
-import useFetch from '../hooks/useFetch'
+import MainNavbar from '../../components/navbar/MainNavbar'
+import SummaryContainner from '../../components/container/SummaryContainer'
+import Spinner from '../../components/spinner/Spinner'
+import Table from '../../components/container/Table'
+import useFetch from '../../hooks/useFetch'
 
 const InventoryPage = () => {
     const {isLoading, apiData, serverErr} = useFetch('/api/v1/inventory')

@@ -1,10 +1,10 @@
-import MainNavBar from '../components/navbar/MainNavbar'
+import MainNavBar from '../../components/navbar/MainNavbar'
 import './_SupplierPage.css'
-import Table from '../components/container/Table'
-import Pagination from '../components/pagination/Pagination'
-import usePagination from '../hooks/usePagination'
-import useFetch from '../hooks/useFetch'
-import ButtonContainer from '../components/buttons/ButtonContainer'
+import Table from '../../components/container/Table'
+import Pagination from '../../components/pagination/Pagination'
+import usePagination from '../../hooks/usePagination'
+import useFetch from '../../hooks/useFetch'
+import ButtonContainer from '../../components/buttons/ButtonContainer'
 
 const itemCount = 1000
 const itemNumPerPage = 10

@@ -1,11 +1,11 @@
-import MainNavbar from "../components/navbar/MainNavbar"
-import Pagination from "../components/pagination/Pagination"
-import useFetch from '../hooks/useFetch'
-import usePagination from "../hooks/usePagination"
+import MainNavbar from "../../components/navbar/MainNavbar"
+import Pagination from "../../components/pagination/Pagination"
+import useFetch from '../../hooks/useFetch'
+import usePagination from "../../hooks/usePagination"
 import './_ProductListPage.css'
-import Table from "../components/container/Table"
-import SummaryContainer from "../components/container/SummaryContainer"
-import ButtonContainer from "../components/buttons/ButtonContainer"
+import Table from "../../components/container/Table"
+import SummaryContainer from "../../components/container/SummaryContainer"
+import ButtonContainer from "../../components/buttons/ButtonContainer"
 
 const itemNumPerPage = 10
 const itemCount = 9
@@ -16,6 +16,7 @@ const ProductListPage = () => {
     var url = `/api/v1/products/pages/${currentPage}/${itemNumPerPage}`
 
     const {isLoading, apiData, serverErr} = useFetch(url)
+    console.log(apiData)
 
     return (
         <div className='page product_list'>

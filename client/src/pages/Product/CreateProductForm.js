@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react'
 import './_CreateProductForm.css'
-import useFetch from '../../../hooks/useFetch'
-import FormInput from '../FormInput'
-import MainNavBar from '../../navbar/MainNavbar'
+import useFetch from '../../hooks/useFetch'
+import FormInput from '../../components/forms/FormInput'
+import MainNavBar from '../../components/navbar/MainNavbar'
 import { useNavigate } from 'react-router-dom'
 
 const CreateProductForm = () => {

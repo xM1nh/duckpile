@@ -20,7 +20,6 @@ export const image_create_post = [
     
     asyncHandler(async (req, res, next) => {
         const productID = req.params.productID
-        console.log(productID)
 
         var filePaths: string[] = []
         if (req.files) {

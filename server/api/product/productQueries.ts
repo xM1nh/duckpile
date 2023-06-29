@@ -51,6 +51,10 @@ export const product_general_detail = `SELECT
                                             INNER JOIN suppliers ON products.supplier = suppliers.id
                                             LEFT JOIN images ON products.id = images.product_id 
                                         WHERE products.id=$1`
+export const product_images = `SELECT
+                                    file_paths
+                                FROM images
+                                WHERE product_id = $1`
 export const product_sales_detail = `SELECT 
                                         sales.id as sale_name,
                                         to_char(sales.sale_date, 'MM-DD-YYYY') as sales_date,
