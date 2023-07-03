@@ -6,9 +6,12 @@ export const get_all_products = `SELECT
                                     products.sku,
                                     products.content,
                                     images.file_paths[1] as image,
-                                    to_char(products.expired_date, 'MM-DD-YYYY') as expired_date,
+                                    to_char(products.expired_date, 'YYYY-MM-DD') as expired_date,
                                     products.price,
                                     products.discount,
+                                    coalesce(inventory_store_1, 0) as inventory_store_1,
+                                    coalesce(inventory_store_2, 0) as inventory_store_2,
+                                    coalesce(inventory_store_3, 0) as inventory_store_3,
                                     products.id as product_id,
                                     suppliers.id as supplier_id
                                 FROM products
@@ -23,9 +26,12 @@ export const get_paginated_products = `SELECT
                                         suppliers.name as supplier_name,
                                         products.sku,
                                         products.content,
-                                        to_char(products.expired_date, 'MM-DD-YYYY') as expired_date,
+                                        to_char(products.expired_date, 'YYYY-MM-DD') as expired_date,
                                         products.price,
                                         products.discount,
+                                        coalesce(inventory_store_1, 0) as inventory_store_1,
+                                        coalesce(inventory_store_2, 0) as inventory_store_2,
+                                        coalesce(inventory_store_3, 0) as inventory_store_3,
                                         products.id as product_id,
                                         suppliers.id as supplier_id
                                     FROM products
@@ -42,9 +48,12 @@ export const product_general_detail = `SELECT
                                             products.sku,
                                             products.content,
                                             images.file_paths[0] as image,
-                                            to_char(products.expired_date, 'MM-DD-YYYY') as expired_date,
+                                            to_char(products.expired_date, 'YYYY-MM-DD') as expired_date,
                                             products.price,
-                                            products.discount,
+                                            coalesce(products.discount, 0) as discount,
+                                            coalesce(inventory_store_1, 0) as inventory_store_1,
+                                            coalesce(inventory_store_2, 0) as inventory_store_2,
+                                            coalesce(inventory_store_3, 0) as inventory_store_3,
                                             products.id as product_id,
                                             suppliers.id as supplier_id
                                         FROM products
@@ -57,7 +66,7 @@ export const product_images = `SELECT
                                 WHERE product_id = $1`
 export const product_sales_detail = `SELECT 
                                         sales.id as sale_name,
-                                        to_char(sales.sale_date, 'MM-DD-YYYY') as sales_date,
+                                        to_char(sales.sale_date, 'YYYY-MM-DD') as sales_date,
                                         sales.quantity,
                                         customers.first_name || ' ' || customers.last_name as customer_name,
                                         sales.payment_method,
@@ -76,7 +85,7 @@ export const product_sales_detail = `SELECT
                                     ORDER BY sale_date DESC`
 export const product_purchase_detail = `SELECT
                                             purchases.id as purchase_name,
-                                            to_char(purchases.purchase_date, 'MM-DD-YYYY') as purchases_date,
+                                            to_char(purchases.purchase_date, 'YYYY-MM-DD') as purchases_date,
                                             purchases.quantity,
                                             stores.store_name as store_name,
                                             suppliers.name as supplier_name,
@@ -91,18 +100,9 @@ export const product_purchase_detail = `SELECT
                                             INNER JOIN suppliers ON purchases.supplier = suppliers.id
                                         WHERE purchases.item = $1
                                         ORDER BY purchase_date DESC`
-export const product_inventory_detail = `SELECT
-                                            products.name as product_name,
-                                            stores.store_name as store_name,
-                                            SUM (inventory.quantity)
-                                        FROM inventory
-                                            INNER JOIN products ON inventory.item = products.id
-                                            INNER JOIN stores ON inventory.store = stores.id
-                                        WHERE inventory.item = $1
-                                        GROUP BY products.name, stores.store_name`
 export const product_show_detail = `SELECT 
                                         show.name AS show,
-                                        to_char(show.date, 'MM-DD-YYYY') as date,
+                                        to_char(show.date, 'YYYY-MM-DD') as date,
                                         products.name as product_name,
                                         show.price,
                                         show.content,
@@ -120,7 +120,10 @@ export const product_create = `INSERT INTO products (
                                     content, 
                                     expired_date, 
                                     price, 
-                                    discount) 
+                                    discount,
+                                    inventory_store_1,
+                                    inventory_store_2,
+                                    inventory_store_3) 
                                 VALUES (
                                     $1, 
                                     $2, 
@@ -130,6 +133,23 @@ export const product_create = `INSERT INTO products (
                                     $6, 
                                     NULLIF($7, '')::date, 
                                     $8, 
-                                    NULLIF($9, '')::decimal)
+                                    NULLIF($9, '')::decimal,
+                                    $10,
+                                    $11,
+                                    $12)
                                 RETURNING id;`
-export const product_update = ''
+export const product_update = `UPDATE products
+                                SET name = $1,
+                                    type = $2,
+                                    brand = $3,
+                                    supplier = $4,
+                                    sku = $5,
+                                    content = $6,
+                                    expired_date = NULLIF($7, '')::date,
+                                    price = $8,
+                                    discount = $9,
+                                    inventory_store_1 = $10,
+                                    inventory_store_2 = $11,
+                                    inventory_store_3 = $12
+                                WHERE products.id = $13`
+export const product_delete = `DELETE FROM products WHERE products.id = $1`
