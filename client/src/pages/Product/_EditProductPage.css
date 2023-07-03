@@ -1,0 +1,121 @@
+.page.edit-product main {
+    grid-template-rows: minmax(0, 1fr);
+}
+
+.edit-product .FormInput {
+    display: flex;
+    justify-content: space-between;
+}
+
+.edit-product input {
+    width: 70%;
+    height: 50%;
+    border: 0;
+    border-bottom: 1px solid black;
+    font-size: 1.5em
+}
+
+.edit-product input:focus {
+    outline: none;
+}
+
+.page.edit-product form {
+    display: grid;
+    grid-template-rows: minmax(0, 3fr) minmax(0, 2fr) minmax(0, 1fr);
+    min-height: 0;
+    min-width: 0;
+    margin: 1%
+}
+
+.edit-product.info {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    padding: 1% 10% 1% 10%;
+    gap: 1%;
+}
+
+.edit-product-image-container {
+    border-right: 2px solid black;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    min-height: 0;
+    max-height: 100%;
+    gap: 3%;
+}
+
+.edit-product-image-container .image-list {
+    border-right: 1px solid rgba(0,0,0,0.3);
+    padding: 5%;
+    overflow-y: scroll;
+}
+
+.edit-product-image-container .image-list > img {
+    object-fit: contain;
+    width: 100%;
+}
+
+.edit-product-image-container .main-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-product-image-container .main-image > img {
+    width: 80%;
+    object-fit: fill;
+}
+
+.edit-product-info-container {
+    display: grid;
+    grid-template-rows: 2fr 2fr 1fr 1fr 1fr 2fr;
+    padding: 1%;
+}
+
+.edit-product-name {
+    font-size: 2em;
+}
+
+.edit-product-supplier {
+    display: flex;
+    gap: 1%;
+    align-items: center;
+}
+
+.edit-product-supplier select {
+    height: 50%;
+}
+
+.edit-product button {
+    height: 50%;
+    width: 30%;
+    justify-self: center;
+    align-self: center;
+    font-size: 2em;
+}
+
+.edit-product.inventory {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10%
+}
+
+.edit-product.inventory > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-product.inventory input {
+    height: 20%;
+}
+
+.edit-product .price {
+    display: flex;
+    gap: 10%;
+}
+
+.edit-product .supplier {
+    display: flex;
+    gap: 5%
+}
