@@ -1,4 +1,5 @@
 import './_Pagination.css'
+import {v4 as uuidv4} from 'uuid'
 
 const Pagination = ({url, currentPage, pageCount, handlePrev, handleNext, handlePage}) => {
     const generate = () => {
@@ -9,7 +10,7 @@ const Pagination = ({url, currentPage, pageCount, handlePrev, handleNext, handle
             if (i <= 3 ||
                 i >= pageCount - 2 ||
                 (i >= currentPage - 1 && i <= currentPage + 1)) {
-                    temp.push(<button onClick={handlePage} id={ i === currentPage ? 'current' : i}>{i}</button>)
+                    temp.push(<button key={uuidv4()} onClick={handlePage} id={ i === currentPage ? 'current' : i}>{i}</button>)
                 i++
             } else {
                 i = i < currentPage ? currentPage - 1 : pageCount - 2
