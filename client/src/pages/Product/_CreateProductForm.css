@@ -4,16 +4,16 @@
     height: 100%;
 }
 
-form {
+.page.create-product form {
     display: grid;
     height: 100%;
     grid-template-areas: 
         'image image image'
         'image image image'
-        'name name type'
+        'name type cont'
         'brand sku supp'
         'price discount date'
-        'cont cont cont'
+        'inv inv inv'
         '. button .';
     gap: 5px;
 }
