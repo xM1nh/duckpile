@@ -9,7 +9,7 @@
     display: grid;
     grid-template-areas: 
         'item-name show-date show-date'
-        'item-name show-name show-name'
+        'item-image show-name show-name'
         'item-image show-price show-price'
         'item-image show-price show-price'
         'item-image show-content show-content'
@@ -20,12 +20,15 @@
     grid-area: item-name;
     display: flex;
     justify-content: center;
+    align-items: center;
     border-right: 1px solid black;
 }
 
 .show-item-container .item-image {
     grid-area: item-image;
     border-right: 1px solid black;
+    display: flex;
+    justify-content: center;
 }
 
 .show-item-container .show-name {

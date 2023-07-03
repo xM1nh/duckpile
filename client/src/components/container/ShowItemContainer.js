@@ -11,7 +11,7 @@ const ShowItemContainer = ({
     return (
         <div className="show-item-container">
             <div className="item-name">{productName}</div>
-            <div className="item-image">{productImg}</div>
+            <div className="item-image"><img src={productImg} alt=''></img></div>
             <div className="show-name">{showName}</div>
             <div className="show-date">{showDate}</div>
             <div className="show-price">{showPrice}</div>
