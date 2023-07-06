@@ -8,15 +8,19 @@ import ShowItemContainer from '../../components/container/ShowItemContainer'
 import ButtonContainer from '../../components/buttons/ButtonContainer'
 import MainNavbar from '../../components/navbar/MainNavbar'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {v4 as uuidv4} from 'uuid'
+import DeleteModal from '../../components/modal/DeleteModal'
 
 const ProductDetailPage = () => {
     const {id} = useParams()
+    const navigate = useNavigate()
     const [mainImg, setMainImg] = useState(null)
     const [data, setData] = useState({})
     const [sale, setSale] = useState([])
     const [purchase, setPurchase] = useState([])
     const [images, setImages] = useState([])
+    const [modalOpen, setModalOpen] = useState(false)
     const { isLoading, apiData, serverErr } = useFetch(`/api/v1/products/product/${id}`)
 
     const handleImageClick = (e) => {
@@ -28,6 +32,26 @@ const ProductDetailPage = () => {
         }, 0) 
 
     const total_inv = parseInt(data.inventory_store_1) + parseInt(data.inventory_store_2) + parseInt(data.inventory_store_3)
+
+    const openModal = () => {
+        setModalOpen(true)
+    }
+
+    const closeModal = () => {
+        setModalOpen(false)
+    }
+
+    const handleDelete = () => {
+        fetch(`/api/v1/products/product/${id}/delete`, {
+            method: 'POST'
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log('deleted')
+            setModalOpen(false)
+            navigate('/products')
+        })
+    }
 
     useEffect(() => {
         if (apiData.general) {
@@ -50,6 +74,7 @@ const ProductDetailPage = () => {
     else {
         return (
             <div className="page product-detail-page">
+                {modalOpen && <DeleteModal handleCancelClick={closeModal} handleDeleteClick={handleDelete}/>}
                 <MainNavbar />
                 
                 <main>
@@ -113,12 +138,12 @@ const ProductDetailPage = () => {
                     </div>
 
                     <ButtonContainer 
-                        add={true}
+                        create={true}
                         edit={true}
                         del={true}
                         addURL='/product/create'
                         editURL={`/product/${id}/edit`}
-                        delURL={`/product/${id}/delete`}
+                        handleDelete={openModal}
                     />
                 </main>
             </div>
