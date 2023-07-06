@@ -1,14 +1,13 @@
-import {Link} from 'react-router-dom'
 import DeleteIcon from '@mui/icons-material/Delete';
 import './_MaterialButton.css'
 
-const DeleteData = ({isDisplay, url}) => {
+const DeleteData = ({isDisplay, handleDelete}) => {
     if (isDisplay) {
         return (
             <div className='material-button del-data'>
-                <Link to={url}>
+                <button onClick={handleDelete}>
                     <DeleteIcon sx={{fontSize: 40, color: 'white'}}/>
-                </Link>
+                </button>
             </div>
         )
     }
