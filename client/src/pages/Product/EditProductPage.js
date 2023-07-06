@@ -17,7 +17,6 @@ const EditProductPage = () => {
     const [info, setInfo] = useState({})
 
     const handleSubmit = (e) => {
-        console.log(info)
         e.preventDefault()
         fetch(`/api/v1/products/product/${id}/update`, {
             method: 'POST',
