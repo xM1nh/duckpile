@@ -3,6 +3,7 @@ import pool from '../../database'
 import * as product_queries from './productQueries'
 import asyncHandler from 'express-async-handler'
 import path from 'path'
+import fs from 'fs'
 
 export const product_list = asyncHandler(async (req, res, next) => {
     const products = await pool.query(product_queries.get_all_products)
@@ -111,7 +112,7 @@ export const product_create_post = [
         }
 
         if(!errors.isEmpty()) {
-            res.status(400).json({ errors })
+            res.status(400).json(errors)
         } else {
             //This will return the newly created product's id
             const create_product = await pool.query(product_queries.product_create, [product.name, product.type, product.brand, product.supplier, product.sku, product.content, product.expDate, product.price, product.discount])
@@ -124,6 +125,12 @@ export const product_create_post = [
 
 export const product_delete_post = asyncHandler(async (req, res, next) => {
     const productID = parseInt(req.params.id)
+    fs.readdir('./uploads', function(err ,list) {
+        const productFolder = list.filter(folder => folder === productID.toString())[0]
+        if (productFolder) {
+            fs.rmSync(`./uploads/${productFolder}`, {recursive: true, force: true})
+        }
+    })
     await pool.query(product_queries.product_delete, [productID])
     res.status(200).json({message: 'Success'})
 })
