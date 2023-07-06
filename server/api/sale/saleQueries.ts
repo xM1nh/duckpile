@@ -1,6 +1,6 @@
 export const get_all_sales = `SELECT 
                                 sales.id as sale_name,
-                                sales.sale_date, 
+                                to_char(sales.sale_date, 'MM-DD-YYYY') as sale_date, 
                                 products.name as product_name, 
                                 sales.quantity, 
                                 customers.first_name || ' ' || customers.last_name as customer_name, 
