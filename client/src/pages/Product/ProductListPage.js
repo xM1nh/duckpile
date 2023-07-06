@@ -56,7 +56,7 @@ const ProductListPage = () => {
                 </section>
                 <section className="product_list">
                     <div className="product-table">
-                        <div className="product-table-title">All Products</div>
+                        <div className="table-title products">All Products</div>
                         <div className="product-table-content">
                             <Table
                                 mainData='product' 
