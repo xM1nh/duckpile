@@ -1,0 +1,26 @@
+.page.create-customer main {
+    grid-template-rows: 1fr;
+}
+
+.page.create-customer form {
+    padding: 1% 10% 1% 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1%;
+}
+
+.page.create-customer h1 {
+    align-self: center;
+}
+
+.page.create-customer button {
+    width: 150px;
+    height: 50px;
+    align-self: center;
+    font-size: 2em;
+}
+
+.page.create-customer input {
+    height: 30px;
+}

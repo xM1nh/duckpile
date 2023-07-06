@@ -6,13 +6,12 @@ import usePagination from '../../hooks/usePagination'
 import useFetch from '../../hooks/useFetch'
 import ButtonContainer from '../../components/buttons/ButtonContainer'
 
-const itemCount = 1000
 const itemNumPerPage = 10
 
 const CustomerPage = () => {
     const {isLoading, apiData, serverErr} = useFetch('/api/v1/customers')
 
-    const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(itemCount, itemNumPerPage)
+    const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(apiData.length, itemNumPerPage)
 
     return (
         <div className="page customer">
@@ -36,7 +35,7 @@ const CustomerPage = () => {
                     />
                 </div>
 
-                <ButtonContainer add={true} addURL='/customer/add' />
+                <ButtonContainer create={true} createURL='/customer/create' />
             </main>
         </div>
     )
