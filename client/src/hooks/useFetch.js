@@ -11,7 +11,7 @@ const useFetch = (url, method, body) => {
             try {
                 const res = await fetch(url, {
                     method: method,
-                    body: body
+                    body: body ? JSON.stringify(body) : null
                 })
                 if (!res.ok) throw new Error(res.statusText)
                 const data = await res.json()
