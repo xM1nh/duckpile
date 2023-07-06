@@ -9,8 +9,9 @@
     margin: 1px
 }
 
-.add-data {
-}
 
-.edit-data {
+.material-button button {
+    background-color: gray;
+    border: 0;
+    border-radius: 20%;
 }
