@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 const useFetch = (url, method, body) => {
     const [isLoading, setIsLoading] = useState(false)
-    const [apiData, setApiData] = useState([])
+    const [apiData, setApiData] = useState(null)
     const [serverErr, setServerErr] = useState(null)
 
     useEffect(() => {
