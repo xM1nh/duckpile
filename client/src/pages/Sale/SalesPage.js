@@ -6,16 +6,31 @@ import './_SalesPage.css'
 import Table from "../../components/container/Table"
 import SummaryContainer from '../../components/container/SummaryContainer'
 import ButtonContainer from '../../components/buttons/ButtonContainer'
+import { useEffect, useState } from 'react'
 
 const itemNumPerPage = 10
 const itemCount = 9
 
 const ProductListPage = () => { 
+    const [data, setData] = useState({
+        summary: [],
+        count: '',
+        mostBuyedProduct: '',
+        mostBuyedCustomer: '',
+    })
+
     const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(itemCount, itemNumPerPage)
     
-    var url = `/api/v1/sales/${currentPage}/${itemNumPerPage}`
-
+    var url = `/api/v1/sales?page=${currentPage}&count=${itemNumPerPage}`
     const {isLoading, apiData, serverErr} = useFetch(url)
+
+    useEffect(() => {
+        if (apiData) {
+            setData(apiData)
+        }
+    }, [apiData])
+
+    console.log(apiData)
 
     return (
         <div className='page sales'>
@@ -23,17 +38,17 @@ const ProductListPage = () => {
 
             <main>
                 <section className="summary">
-                    <SummaryContainer />
-                    <SummaryContainer />
-                    <SummaryContainer />
+                    <SummaryContainer data_to_show={data.count} text_to_show='Total Sales'/>
+                    <SummaryContainer data_to_show={data.mostBuyedProduct} text_to_show='Most Buyed Product'/>
+                    <SummaryContainer data_to_show={data.mostBuyedCustomer} text_to_show='Most Buyed Customer'/>
                 </section>
                 <section className="recent-sales">
                     <div className="sales-table">
                         <div className="sales-table-title">Recent sales</div>
                         <div className="sales-table-content">
                             <Table 
-                                header_array={['Code', 'Sale Date', 'Item', 'Quantity', 'Customer', 'Store', 'Staff']}
-                                data_array={apiData}
+                                header_array={['Products','Code', 'Sale Date', 'Total Amount', 'Payment Method', 'Customer', 'Store', 'Staff']}
+                                data_array={data.summary}
                                 mainData='sale'
                             />
                         </div>
@@ -48,7 +63,7 @@ const ProductListPage = () => {
                     </div>
                 </section>
 
-                <ButtonContainer add={true} addURL='/sale/add' />
+                <ButtonContainer create={true} createURL='/sale/create' />
             </main>
         </div>
     )
