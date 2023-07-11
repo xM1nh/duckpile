@@ -2,15 +2,13 @@ import express from 'express'
 import * as sale_controller from './saleController'
 const router = express.Router()
 
-router.get('/:page/:limit', sale_controller.sale_list)
+router.get('/', sale_controller.sale_list)
 
 router.get('/sale/:id', sale_controller.sale_detail)
 
-router.get('/sale/create', sale_controller.sale_delete_get)
+router.get('/create', sale_controller.sale_create_get)
 
-router.post('/sale/create', sale_controller.sale_create_post)
-
-router.get('/sale/:id/delete', sale_controller.sale_delete_get)
+router.post('/create', sale_controller.sale_create_post)
 
 router.post('/sale/:id/delete', sale_controller.sale_delete_post)
 
