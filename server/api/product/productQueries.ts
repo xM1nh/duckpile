@@ -1,24 +1,4 @@
 export const get_all_products = `SELECT 
-                                    products.name as product_name,
-                                    products.type,
-                                    products.brand,
-                                    suppliers.name as supplier_name,
-                                    products.sku,
-                                    products.content,
-                                    images.file_paths[1] as image,
-                                    to_char(products.expired_date, 'YYYY-MM-DD') as expired_date,
-                                    products.price,
-                                    products.discount,
-                                    coalesce(inventory_store_1, 0) as inventory_store_1,
-                                    coalesce(inventory_store_2, 0) as inventory_store_2,
-                                    coalesce(inventory_store_3, 0) as inventory_store_3,
-                                    products.id as product_id,
-                                    suppliers.id as supplier_id
-                                FROM products
-                                    INNER JOIN suppliers ON products.supplier = suppliers.id
-                                    LEFT JOIN images ON products.id = images.product_id`
-export const get_product_count = 'SELECT count(*) FROM products'
-export const get_paginated_products = `SELECT 
                                         images.file_paths[1] as image,
                                         products.name as product_name,
                                         products.type,
@@ -26,7 +6,7 @@ export const get_paginated_products = `SELECT
                                         suppliers.name as supplier_name,
                                         products.sku,
                                         products.content,
-                                        to_char(products.expired_date, 'YYYY-MM-DD') as expired_date,
+                                        to_char(products.expired_date, 'MM-DD-YYYY') as expired_date,
                                         products.price,
                                         products.discount,
                                         coalesce(inventory_store_1, 0) as inventory_store_1,
@@ -39,6 +19,7 @@ export const get_paginated_products = `SELECT
                                         LEFT JOIN images ON products.id = images.product_id
                                     ORDER BY products.name
                                     LIMIT $1 OFFSET $2`
+export const get_product_count = 'SELECT count(id) FROM products'
 export const sort_all_products = 'SELECT * FROM products ORDER BY $1 $2'
 export const product_general_detail = `SELECT 
                                             products.name as product_name,
@@ -82,7 +63,8 @@ export const product_sales_detail = `SELECT
                                         INNER JOIN staffs ON sales.staff = staffs.id
                                         LEFT JOIN customers ON sales.customer = customers.id
                                     WHERE sales.item = $1
-                                    ORDER BY sale_date DESC`
+                                    ORDER BY sale_date DESC
+                                    LIMIT 30`
 export const product_purchase_detail = `SELECT
                                             purchases.id as purchase_name,
                                             to_char(purchases.purchase_date, 'YYYY-MM-DD') as purchases_date,
@@ -99,7 +81,8 @@ export const product_purchase_detail = `SELECT
                                             INNER JOIN staffs ON purchases.staff = staffs.id
                                             INNER JOIN suppliers ON purchases.supplier = suppliers.id
                                         WHERE purchases.item = $1
-                                        ORDER BY purchase_date DESC`
+                                        ORDER BY purchase_date DESC
+                                        LIMIT 30`
 export const product_show_detail = `SELECT 
                                         show.name AS show,
                                         to_char(show.date, 'YYYY-MM-DD') as date,
