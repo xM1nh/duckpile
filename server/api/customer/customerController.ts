@@ -4,14 +4,19 @@ import asyncHandler from 'express-async-handler'
 import { body, validationResult } from 'express-validator'
 
 export const customer_list = asyncHandler(async (req, res, next) => {
-    const customers = await pool.query(customer_queries.get_all_customers)
-    res.status(200).json(customers.rows)
+    const pagination = {
+        limit: Number(req.query.count),
+        offset: (Number(req.query.page) - 1) * Number(req.query.count)
+    }
+    const customers = await pool.query(customer_queries.get_all_customers, [pagination.limit, pagination.offset])
+    const customersCount = await pool.query(customer_queries.get_customers_count)
+    res.status(200).json({customers: customers.rows, count: customersCount.rows[0].count})
 })
 
 export const customer_detail = asyncHandler(async (req, res, next) => {
     const id = parseInt(req.params.id)
     const customer = await pool.query(customer_queries.customer_detail, [id])
-    const sales = await pool.query(customer_queries.customer_buy_detail, [id])
+    /*const sales = await pool.query(customer_queries.customer_buy_detail, [id])
 
     const totalSales = sales.rows.length
     const totalValue = sales.rows.reduce((sum: number, curr: {quantity: number, xxxidxxx: number}) => {
@@ -30,9 +35,9 @@ export const customer_detail = asyncHandler(async (req, res, next) => {
 
         const returns = Object.entries(productMap).sort((a,b) => b[1] - a[1])
         return returns.shift()
-    }
+    */
 
-    res.status(200).json({general: customer.rows[0], sales: {list: sales.rows, mostBuyedProduct: mostBuyedProduct(), totalSales: totalSales, totalValue: totalValue}})
+    res.status(200).json({general: customer.rows[0], /*sales: {list: sales.rows, mostBuyedProduct: mostBuyedProduct(), totalSales: totalSales, totalValue: totalValue}*/})
 })
 
 export const customer_create_post = [
@@ -47,7 +52,8 @@ export const customer_create_post = [
     body('phoneNumber')
         .trim()
         .isLength({min: 10, max: 10})
-        .escape(),
+        .escape()
+        .toInt(),
     body('street')
         .trim()
         .escape(),
@@ -59,7 +65,8 @@ export const customer_create_post = [
         .escape(),
     body('zip')
         .trim()
-        .escape(),
+        .escape()
+        .toInt(),
 
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req)
@@ -67,7 +74,7 @@ export const customer_create_post = [
         const customer = {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            phoneNumber: parseInt(req.body.phoneNumber),
+            phoneNumber: req.body.phoneNumber,
             street: req.body.street === '' ? null : req.body.street,
             city: req.body.city === '' ? null : req.body.city,
             state: req.body.state === '' ? null : req.body.state,
@@ -86,7 +93,9 @@ export const customer_create_post = [
 ]
 
 export const customer_delete_post = asyncHandler(async (req, res, next) => {
-    res.send('not implemented: customer delete post')
+    const id = parseInt(req.params.id)
+    await pool.query(customer_queries.customer_delete, [id])
+    res.status(200).json({message: 'Deleted'})
 })
 
 export const customer_update_get = asyncHandler(async (req, res, next) => {
@@ -107,7 +116,8 @@ export const customer_update_post = [
     body('phone_number')
         .trim()
         .isLength({min: 10, max: 10})
-        .escape(),
+        .escape()
+        .toInt(),
     body('street')
         .trim()
         .escape(),
@@ -119,7 +129,8 @@ export const customer_update_post = [
         .escape(),
     body('zip')
         .trim()
-        .escape(),
+        .escape()
+        .toInt(),
 
     asyncHandler(async (req, res, next) => {
         const id = parseInt(req.params.id)
@@ -128,7 +139,7 @@ export const customer_update_post = [
         const customer = {
             firstName: req.body.first_name,
             lastName: req.body.last_name,
-            phoneNumber: parseInt(req.body.phone_number),
+            phoneNumber: req.body.phone_number,
             street: req.body.street === '' ? null : req.body.street,
             city: req.body.city === '' ? null : req.body.city,
             state: req.body.state === '' ? null : req.body.state,
