@@ -10,6 +10,10 @@
     gap: 1%;
 }
 
+.sales main .container-data.value.summary {
+    font-size: 4em;
+}
+
 .sales-table-title {
     text-align: center;
     padding: 20px;
