@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import {v4 as uuidv4} from 'uuid'
 
 const Table = ({mainData, header_array, data_array, handleDelete}) => {
-    const mainDataID = mainData.concat('_', 'id')
+    const mainDataID = mainData ? mainData.concat('_', 'id') : null
 
     return (
         <table>
@@ -14,7 +14,7 @@ const Table = ({mainData, header_array, data_array, handleDelete}) => {
                             <th key={uuidv4()}>{header}</th>
                         )
                     })}
-                    <th></th>
+                    <th className='table-buttons'></th>
                 </tr>
             </thead>
             {data_array.map((object, i) => {
@@ -46,9 +46,9 @@ const Table = ({mainData, header_array, data_array, handleDelete}) => {
                                     )
                                 })
                             }
-                            <td style={{textAlign: 'center'}}>
+                            <td style={{textAlign: 'center'}} className='table-buttons'>
                                 <Link to={`/${mainData}/${object[mainDataID]}/edit`} className='edit' style={{marginRight: '15%'}}>Edit</Link>
-                                <button id={object[mainDataID]} className='delete' onClick={handleDelete}>Delete</button>
+                                <button id={object[mainDataID]} className='delete' onClick={handleDelete} type='button'>Delete</button>
                             </td>
                         </tr>
                     </tbody>
