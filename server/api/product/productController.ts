@@ -6,25 +6,13 @@ import path from 'path'
 import fs from 'fs'
 
 export const product_list = asyncHandler(async (req, res, next) => {
-    const products = await pool.query(product_queries.get_all_products)
-    const productsUpdatedURL = products.rows.map((row: any) => {
-        if (row.image) {
-           const {image, ...rest} = row
-           const imagePath = path.join('..', image)
-           return {...rest, imagePath}
-        } else {
-            return row
-        }
-    })
-    res.status(200).json(productsUpdatedURL)
-})
-
-export const paginated_product_get = asyncHandler(async (req, res, next) => {
-    const page = parseInt(req.params.page)
-    const limit = parseInt(req.params.limit)
-    const offset = (page - 1) * limit
-    const products = await pool.query(product_queries.get_paginated_products, [limit, offset])
-    const productsUpdatedURL = products.rows.map((row: any) => {
+    const pagination = {
+        limit: Number(req.query.count),
+        offset: (Number(req.query.page) - 1) * Number(req.query.count)
+    }
+    const products = await pool.query(product_queries.get_all_products, [pagination.limit, pagination.offset])
+    const totalProducts = await pool.query(product_queries.get_product_count)
+    const productsUpdatedImageURL = products.rows.map((row: any) => {
         if (row.image) {
            const {image, ...rest} = row
            const imagePath = path.join('..', image)
@@ -33,7 +21,7 @@ export const paginated_product_get = asyncHandler(async (req, res, next) => {
             return row
         }
     })
-    res.status(200).json(productsUpdatedURL)
+    res.status(200).json({products: productsUpdatedImageURL, count: totalProducts.rows[0].count})
 })
 
 export const product_detail = asyncHandler(async (req, res, next) => {
