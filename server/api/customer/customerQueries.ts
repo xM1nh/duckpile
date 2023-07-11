@@ -3,8 +3,9 @@ export const get_all_customers = `SELECT
                                     concat(street, coalesce(', ' || city, ''), coalesce(', ' || state, ''), coalesce(' ' || zip, '')) as address,
                                     phone_number, 
                                     id as customer_id
-                                    FROM customers`
-export const sort = 'SELECT * FROM customers ORDER BY $1 $2'
+                                    FROM customers
+                                    LIMIT $1 OFFSET $2`
+export const get_customers_count = `SELECT count(id) FROM customers`
 export const customer_detail = `SELECT 
                                     first_name,
                                     last_name,
@@ -50,3 +51,4 @@ export const customer_update = `UPDATE customers
                                     zip = $6,
                                     phone_number = $7
                                 WHERE id = $8`
+export const customer_delete = `DELETE FROM customers WHERE id = $1`
