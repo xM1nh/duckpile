@@ -6,7 +6,7 @@ router.get('/', customer_controller.customer_list)
 
 router.get('/customer/:id', customer_controller.customer_detail)
 
-router.post('/customer/create', customer_controller.customer_create_post)
+router.post('/create', customer_controller.customer_create_post)
 
 router.post('/customer/:id/delete', customer_controller.customer_delete_post)
 
