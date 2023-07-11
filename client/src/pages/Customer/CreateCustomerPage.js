@@ -19,7 +19,7 @@ const CreateCustomerPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        fetch(`/api/v1/customers/customer/create`, {
+        fetch(`/api/v1/customers/create`, {
             method: 'POST',
             headers: {
                 'Content-Type':'application/json'

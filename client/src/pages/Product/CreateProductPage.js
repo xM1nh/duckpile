@@ -60,7 +60,7 @@ const CreateProductForm = () => {
             formData.append('images', img)
         })
             
-        fetch('/api/v1/products/product/create', {
+        fetch('/api/v1/products/create', {
             method: 'POST',
             headers: {
                 'Content-Type':'application/json'
