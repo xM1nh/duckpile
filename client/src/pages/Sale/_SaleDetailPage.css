@@ -1,0 +1,142 @@
+.sale-detail main {
+    grid-template-rows: minmax(0, 1fr) minmax(0, 5fr) minmax(0, 1fr);
+}
+
+.sale-detail .customer-info {
+    display: grid;
+    grid-template-areas: 
+    'title title title'
+    'name name phone'
+    'address address address'
+;
+    padding: 1%;
+    column-gap: 2%;
+    row-gap: 1%;
+}
+
+.sale-detail .label {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.sale-detail .value {
+    font-size: 1.5em;
+    border-bottom: 1px solid black;
+}
+
+.sale-detail .customer-info > div {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 15px
+}
+
+.sale-detail .customer-info h1 {
+    grid-area: title;
+    text-align: center;
+}
+
+.sale-detail .customer-info #name {
+    grid-area: name;
+}
+
+.sale-detail .customer-info #phone {
+    grid-area: phone;
+}
+
+.sale-detail .customer-info #address {
+    grid-area: address;
+}
+
+.sale-detail .product-info {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 5fr);
+    padding: 1%;
+}
+
+.sale-detail .product-info h1 {
+    justify-self: center;
+    text-align: center;
+}
+
+.sale-detail .product-info .product-selection {
+    position: relative;
+}
+
+.sale-detail .product-info .list-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    outline: 1px solid black;
+    margin-bottom: 1%;
+    overflow-y: scroll;
+}
+
+.sale-detail .product-info .list-section .total {
+    margin: 1%;
+    display: grid;
+    grid-template-columns: minmax(0, 9fr) minmax(0, 5fr);
+    font-size: 1.5em;
+    font-weight: bold;
+    gap: 800px;
+    border-top: 1px solid black ;
+}
+
+.sale-detail .product-info .list-section .total .amount {
+    padding-left: 5%;
+}
+
+.sale-detail .product-info .list-section .total .amount::before {
+    content: '$';
+}
+
+.sale-detail table {
+    font-size: 1.2em;
+
+}
+
+.sale-detail th:nth-child(odd) {
+    width: 90%;
+}
+
+.sale-detail .table-buttons{
+    display: none;
+}
+
+.sale-detail .sale-info {
+    display: grid;
+    grid-template-areas: 
+        'title title title title'
+        'date payment staff store';
+    column-gap: 5%;
+    padding-bottom: 1%;
+}
+
+.sale-detail .sale-info > div {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+}
+
+.sale-detail .sale-info h1 {
+    grid-area: title;
+    text-align: center;
+}
+
+.sale-detail .sale-info #staff {
+    grid-area: staff;
+}
+
+.sale-detail .sale-info #store {
+    grid-area: store;
+    position: relative;
+}
+
+.sale-detail .sale-info #date {
+    grid-area: date;
+}
+
+.sale-detail .sale-info #payment {
+    grid-area: payment;
+}
