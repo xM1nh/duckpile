@@ -36,7 +36,30 @@ export const get_most_buyed_customer = `SELECT
                                         GROUP BY customer_name
                                         ORDER BY count DESC
                                         LIMIT 1`
-export const sale_detail = 'SELECT * FROM sales WHERE id = $1'
+export const sale_detail = `SELECT 
+                                sales.id as sale_name,
+                                to_char(sales.sale_date, 'MM-DD-YYYY') as sale_date,
+                                ARRAY(SELECT concat(products.name, ',', sale_products.quantity, ',', products.price, ',', products.id)
+                                        FROM sale_products
+                                            INNER JOIN products ON sale_products.product_id = products.id
+                                        WHERE sale_products.sale_id = sales.id) AS products,
+                                sales.total_amount,
+                                payment_method,
+                                customers.first_name,
+                                customers.last_name,
+                                customers.phone_number,
+                                customers.street,
+                                customers.city,
+                                customers.state,
+                                customers.zip,
+                                sales.staff,
+                                stores.store_name,
+                                stores.id as store_id,
+                                customers.id as customer_id
+                            FROM sales
+                                INNER JOIN stores ON sales.store = stores.id
+                                LEFT JOIN customers ON sales.customer = customers.id
+                            WHERE sales.id = $1;`
 export const sale_create = `INSERT INTO sales (
                                 sale_date, 
                                 store, 
@@ -54,4 +77,12 @@ export const sale_create = `INSERT INTO sales (
                                 $6
                                 ) 
                             RETURNING sales.id`
-export const sale_update = ''
+export const sale_update = `UPDATE sales
+                            SET sale_date = $1, 
+                                store = $2, 
+                                staff = $3, 
+                                payment_method = $4, 
+                                customer = $5,
+                                total_amount = $6
+                            WHERE sales.id = $7`
+export const sale_delete = `DELETE FROM sales WHERE sales.id = $1`
