@@ -15,6 +15,7 @@ import CreateCustomerPage from "./pages/Customer/CreateCustomerPage";
 import EditCustomerPage from "./pages/Customer/EditCustomerPage";
 import CreateSalePage from "./pages/Sale/CreateSalePage";
 import SaleDetailPage from "./pages/Sale/SaleDetailPage";
+import EditSalePage from "./pages/Sale/EditSalePage";
 
 
 const RouteSwitch = () => {
@@ -34,6 +35,7 @@ const RouteSwitch = () => {
                 <Route path='/sales' element={<SalesPage />} />
                 <Route path='/sale/:id' element={<SaleDetailPage />} />
                 <Route path='/sale/create' element ={<CreateSalePage />} />
+                <Route path='/sale/:id/edit' element={<EditSalePage />} />
                 <Route path='/inventory' element={<InventoryPage />} />
                 <Route path='/suppliers' element={<SupplierPage />} />
             </Routes>
