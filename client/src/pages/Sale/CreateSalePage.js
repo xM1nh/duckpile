@@ -1,6 +1,5 @@
 import MainNavbar from '../../components/navbar/MainNavbar'
 import './_CreateSalePage.css'
-import FormInput from '../../components/forms/FormInput'
 import { useEffect, useState } from 'react'
 import useFetch from '../../hooks/useFetch'
 import Table from '../../components/container/Table'
@@ -227,10 +226,10 @@ const CreateSalePage = () => {
     }
 
     const handleDelete = (e) => {
-        const productIndex = e.target.parentNode.parentNode.rowIndex
+        const productID = e.target.id
         setProducts(prevState => ({
             ...prevState,
-            allSelected: prevState.allSelected.filter((product, idx) => idx !== productIndex)
+            allSelected: prevState.allSelected.filter(product => product.product_id !== productID)
         }))
     }
 
