@@ -19,19 +19,27 @@ export const customer_detail = `SELECT
                                 WHERE id = $1`
 export const customer_buy_detail = `SELECT
                                         sales.id as sale_name,
-                                        products.name as product_name,
-                                        products.price as xxxidxxx,
-                                        sales.quantity,
+                                        ARRAY(SELECT concat(products.name, ',', sale_products.quantity, ',', products.id)
+                                                    FROM sale_products
+                                                        INNER JOIN products ON sale_products.product_id = products.id
+                                                    WHERE sale_products.sale_id = sales.id) AS products,
                                         to_char(sales.sale_date, 'MM-DD-YYYY') as sale_date,
+                                        sales.total_amount,
+                                        payment_method,
                                         stores.store_name as store_name,
-                                        staffs.first_name || ' ' || staffs.last_name as staff_name,
-                                        products.id as product_id,
+                                        sales.staff as staff_name,
                                         sales.id as sale_id
                                     FROM sales
-                                        INNER JOIN products ON sales.item = products.id
                                         INNER JOIN stores ON sales.store = stores.id
-                                        INNER JOIN staffs ON sales.staff = staffs.id
                                     WHERE sales.customer = $1`
+export const customer_most_buyed = `SELECT products.name, sum(sale_products.quantity) as quantity
+                                    FROM sales
+                                        INNER JOIN sale_products ON sales.id = sale_products.sale_id
+                                        INNER JOIN products ON sale_products.product_id = products.id
+                                    WHERE sales.customer = $1
+                                    GROUP BY products.name
+                                    ORDER BY quantity DESC
+                                    LIMIT 1;`                                    
 export const customer_create = `INSERT INTO customers (
                                     first_name, 
                                     last_name,

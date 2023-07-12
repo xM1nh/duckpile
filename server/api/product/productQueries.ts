@@ -48,40 +48,42 @@ export const product_images = `SELECT
 export const product_sales_detail = `SELECT 
                                         sales.id as sale_name,
                                         to_char(sales.sale_date, 'YYYY-MM-DD') as sales_date,
-                                        sales.quantity,
+                                        sale_products.quantity,
                                         customers.first_name || ' ' || customers.last_name as customer_name,
                                         sales.payment_method,
                                         stores.store_name as store_name,
-                                        staffs.first_name || ' ' || staffs.last_name as staff,
+                                        sales.staff,
                                         products.id as product_id,
                                         customers.id as customer_id,
                                         stores.id as store_id,
                                         sales.id as sale_id
-                                    FROM sales
-                                        INNER JOIN products ON sales.item = products.id
+                                    FROM sale_products
+                                        INNER JOIN sales ON sale_products.sale_id = sales.id
+                                        INNER JOIN products ON sale_products.product_id = products.id
                                         INNER JOIN stores ON sales.store = stores.id
-                                        INNER JOIN staffs ON sales.staff = staffs.id
                                         LEFT JOIN customers ON sales.customer = customers.id
-                                    WHERE sales.item = $1
+                                    WHERE sale_products.product_id = $1
                                     ORDER BY sale_date DESC
                                     LIMIT 30`
-export const product_purchase_detail = `SELECT
-                                            purchases.id as purchase_name,
-                                            to_char(purchases.purchase_date, 'YYYY-MM-DD') as purchases_date,
-                                            purchases.quantity,
+export const product_purchase_detail = `SELECT 
+                                            sales.id as sale_name,
+                                            to_char(sales.sale_date, 'YYYY-MM-DD') as sales_date,
+                                            sale_products.quantity,
+                                            customers.first_name || ' ' || customers.last_name as customer_name,
+                                            sales.payment_method,
                                             stores.store_name as store_name,
-                                            suppliers.name as supplier_name,
-                                            staffs.first_name || ' ' || staffs.last_name as staff,
+                                            sales.staff,
+                                            products.id as product_id,
+                                            customers.id as customer_id,
                                             stores.id as store_id,
-                                            suppliers.id as supplier_id,
-                                            purchases.id as purchase_id
-                                        FROM purchases
-                                            INNER JOIN products ON purchases.item = products.id
-                                            INNER JOIN stores ON purchases.store = stores.id
-                                            INNER JOIN staffs ON purchases.staff = staffs.id
-                                            INNER JOIN suppliers ON purchases.supplier = suppliers.id
-                                        WHERE purchases.item = $1
-                                        ORDER BY purchase_date DESC
+                                            sales.id as sale_id
+                                        FROM sale_products
+                                            INNER JOIN sales ON sale_products.sale_id = sales.id
+                                            INNER JOIN products ON sale_products.product_id = products.id
+                                            INNER JOIN stores ON sales.store = stores.id
+                                            LEFT JOIN customers ON sales.customer = customers.id
+                                        WHERE sale_products.product_id = $1
+                                        ORDER BY sale_date DESC
                                         LIMIT 30`
 export const product_show_detail = `SELECT 
                                         show.name AS show,

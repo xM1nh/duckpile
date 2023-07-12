@@ -16,28 +16,36 @@ export const customer_list = asyncHandler(async (req, res, next) => {
 export const customer_detail = asyncHandler(async (req, res, next) => {
     const id = parseInt(req.params.id)
     const customer = await pool.query(customer_queries.customer_detail, [id])
-    /*const sales = await pool.query(customer_queries.customer_buy_detail, [id])
-
+    const sales = await pool.query(customer_queries.customer_buy_detail, [id])
+    const mostBuyedProduct = await pool.query(customer_queries.customer_most_buyed, [id])
     const totalSales = sales.rows.length
-    const totalValue = sales.rows.reduce((sum: number, curr: {quantity: number, xxxidxxx: number}) => {
-        return sum + curr.quantity * curr.xxxidxxx
+    const totalValue = sales.rows.reduce((sum: number, curr: {total_amount: number}) => {
+        return sum + curr.total_amount
     }, 0)
 
-    const mostBuyedProduct = () => {
-        const productMap: {[key:string]: number} = {}
-        sales.rows.forEach((row: {product_name: string}) => {
-            if (!productMap[row.product_name]) {
-                productMap[row.product_name] = 1
-            } else {
-                productMap[row.product_name]++
-            }
-        })
+    const response = {
+        general: customer.rows[0],
+        sales: {
+            list: sales.rows.map((row: {products: string[]}) => {
+                var {products, ...rest} = row
+                let result: string = ''
+                row.products.forEach(product => {
+                    const name = product.split(',')[0]
+                    const quantity = product.split(',')[1]
+                    const value = quantity + 'x' + ' ' + name + ', '
+                    result += value
+                })
+                return {result, ...rest}
+            }),
+            totalSales: totalSales,
+            totalValue: totalValue,
+            mostBuyedProduct: mostBuyedProduct.rows[0]
+        }
+    }
 
-        const returns = Object.entries(productMap).sort((a,b) => b[1] - a[1])
-        return returns.shift()
-    */
+    console.log(sales.rows)
 
-    res.status(200).json({general: customer.rows[0], /*sales: {list: sales.rows, mostBuyedProduct: mostBuyedProduct(), totalSales: totalSales, totalValue: totalValue}*/})
+    res.status(200).json(response)
 })
 
 export const customer_create_post = [
