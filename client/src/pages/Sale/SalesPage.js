@@ -6,12 +6,13 @@ import './_SalesPage.css'
 import Table from "../../components/container/Table"
 import SummaryContainer from '../../components/container/SummaryContainer'
 import ButtonContainer from '../../components/buttons/ButtonContainer'
+import DeleteModal from '../../components/modal/DeleteModal'
 import { useEffect, useState } from 'react'
 
 const itemNumPerPage = 10
-const itemCount = 9
 
-const ProductListPage = () => { 
+const SalePage = () => { 
+    const [deleteItem, setDeleteItem] = useState(null)
     const [data, setData] = useState({
         summary: [],
         count: '',
@@ -19,10 +20,36 @@ const ProductListPage = () => {
         mostBuyedCustomer: '',
     })
 
-    const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(itemCount, itemNumPerPage)
-    
+    const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(data.count, itemNumPerPage)
+    const [modalOpen, setModalOpen] = useState(false)
+
     var url = `/api/v1/sales?page=${currentPage}&count=${itemNumPerPage}`
     const {isLoading, apiData, serverErr} = useFetch(url)
+
+    const openModal = (e) => {
+        setModalOpen(true)
+        setDeleteItem(e.target.id)
+    }
+
+    const closeModal = () => {
+        setModalOpen(false)
+        setDeleteItem(null)
+    }
+
+    const handleDelete = () => {
+        fetch(`/api/v1/sales/sale/${deleteItem}/delete`, {
+            method: 'POST'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.message === 'Success') {
+                console.log('Deleted')
+                setModalOpen(false)
+                setDeleteItem(null)
+                window.location.reload()
+            }
+        })
+    }
 
     useEffect(() => {
         if (apiData) {
@@ -30,10 +57,9 @@ const ProductListPage = () => {
         }
     }, [apiData])
 
-    console.log(apiData)
-
     return (
         <div className='page sales'>
+            {modalOpen && <DeleteModal handleCancelClick={closeModal} handleDeleteClick={handleDelete}/>}
             <MainNavbar />
 
             <main>
@@ -50,6 +76,7 @@ const ProductListPage = () => {
                                 header_array={['Products','Code', 'Sale Date', 'Total Amount', 'Payment Method', 'Customer', 'Store', 'Staff']}
                                 data_array={data.summary}
                                 mainData='sale'
+                                handleDelete={openModal}
                             />
                         </div>
 
@@ -69,4 +96,4 @@ const ProductListPage = () => {
     )
 }
 
-export default ProductListPage
+export default SalePage
