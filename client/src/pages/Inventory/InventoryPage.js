@@ -22,29 +22,25 @@ const InventoryPage = () => {
     })
 
     useEffect(() => {
-        if (apiData.store1) {
-            const availProduct = apiData.store1.filter(product => product.quantity).length
+        if (apiData) {
+            const availProduct1 = apiData.store1.filter(product => product.quantity).length
             setStore1({
-                availProduct: availProduct,
+                availProduct: availProduct1,
                 inventory: apiData.store1
             })
-        }
-        if (apiData.store2) {
-            const availProduct = apiData.store2.filter(product => product.quantity).length
+            const availProduct2 = apiData.store2.filter(product => product.quantity).length
             setStore2({
-                availProduct: availProduct,
+                availProduct: availProduct2,
                 inventory: apiData.store2
             })
-        }
-        if (apiData.store3) {
-            const availProduct = apiData.store3.filter(product => product.quantity).length
+            const availProduct3 = apiData.store3.filter(product => product.quantity).length
             setStore3({
-                availProduct: availProduct,
+                availProduct: availProduct3,
                 inventory: apiData.store3
             })
         }
 
-    }, [apiData.store1, apiData.store2, apiData.store3])
+    }, [apiData])
 
     return (
         <div className='page inventory'>
@@ -61,21 +57,21 @@ const InventoryPage = () => {
                         <h2>Store 1</h2>
                         <Table 
                             header_array={['Product', 'Quantity']} 
-                            data_array={apiData.store1 ? apiData.store1 : []} 
+                            data_array={apiData ? apiData.store1 : []} 
                             mainData='product'/>
                     </div>
                     <div>
                         <h2>Store 2</h2>
                         <Table 
                             header_array={['Product', 'Quantity']} 
-                            data_array={apiData.store2 ? apiData.store2 : []}
+                            data_array={apiData ? apiData.store2 : []}
                             mainData='product' />
                     </div>
                     <div>
                         <h2>Store 3</h2>
                         <Table 
                             header_array={['Product', 'Quantity']} 
-                            data_array={apiData.store3 ? apiData.store3 : []} 
+                            data_array={apiData ? apiData.store3 : []} 
                             mainData='product'/>
                     </div>
                 </div>

@@ -24,22 +24,20 @@ const CustomerDetailPage = () => {
     const {isLoading, apiData, serverErr} = useFetch(`/api/v1/customers/customer/${id}`)
     
     useEffect(() => {
-        if (apiData.general) {
+        if (apiData) {
             setCustomerData({
                 name: apiData.general.first_name + ' ' + apiData.general.last_name,
                 address: apiData.general.street + ', ' + apiData.general.city + ', ' + apiData.general.state + ' ' + apiData.general.zip,
                 phone_number: apiData.general.phone_number
             })
-        }
-        if (apiData.sales) {
             setCustomerSaleData({
                 list: apiData.sales.list,
-                mostBuyedProduct: apiData.sales.mostBuyedProduct ? apiData.sales.mostBuyedProduct[0] : 'No Data',
+                mostBuyedProduct: apiData.sales.mostBuyedProduct ? apiData.sales.mostBuyedProduct.name : 'No Data',
                 totalSales: apiData.sales.totalSales,
                 totalValue: apiData.sales.totalValue
             })
         }
-    }, [apiData.general, apiData.sales])
+    }, [apiData])
 
     return (
         <div className='page customer-detail'>
@@ -59,7 +57,7 @@ const CustomerDetailPage = () => {
                 <div className='sales'>
                     <div className='table-title sales'>All Sales</div>
                     <Table 
-                    header_array={['Sale Code', 'Product', 'Quantity', 'Date', 'Location', 'Staff']}
+                    header_array={['Products', 'Sale', 'Date', 'Total Amount', 'Payment Method', 'Location', 'Staff']}
                     data_array={customerSaleData.list}
                     mainData='sale'
                     />

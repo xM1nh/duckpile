@@ -19,6 +19,12 @@ const ProductDetailPage = () => {
     const [data, setData] = useState({})
     const [sale, setSale] = useState([])
     const [purchase, setPurchase] = useState([])
+    const [show, setShow] = useState({
+        show: 'N/A',
+        date: 'N/A',
+        price: 'N/A',
+        content: 'N/A'
+    })
     const [images, setImages] = useState([])
     const [modalOpen, setModalOpen] = useState(false)
     const { isLoading, apiData, serverErr } = useFetch(`/api/v1/products/product/${id}`)
@@ -27,10 +33,7 @@ const ProductDetailPage = () => {
         setMainImg(e.target.src)
     }
 
-    const total_sales = sale.reduce((sum, curr) => {
-        return sum + curr.quantity
-        }, 0) 
-
+    const total_sales = sale.length
     const total_inv = parseInt(data.inventory_store_1) + parseInt(data.inventory_store_2) + parseInt(data.inventory_store_3)
 
     const openModal = () => {
@@ -54,20 +57,20 @@ const ProductDetailPage = () => {
     }
 
     useEffect(() => {
-        if (apiData.general) {
+        if (apiData) {
             setData(apiData.general)
-        }
-        if (apiData.sales) {
             setSale(apiData.sales)
-        }
-        if (apiData.purchases) {
             setPurchase(apiData.purchases)
-        }
-        if (apiData.images) {
             setImages(apiData.images)
             setMainImg(apiData.images[0])
+
+            if (apiData.show) {
+                setShow(apiData.show)
+            }
         }
-    }, [apiData.general, apiData.sales, apiData.purchases, apiData.images])
+    }, [apiData])
+
+    console.log(apiData)
 
     if (isLoading) return <Spinner />
     else if (serverErr) return (<div>404</div>)
@@ -112,10 +115,10 @@ const ProductDetailPage = () => {
                         <ShowItemContainer 
                             productName={data.product_name}
                             productImg={images[0]}
-                            showName={apiData.show ? apiData.show.show : 'N/A'}
-                            showDate={apiData.show ? apiData.show.date : 'N/A'}
-                            showPrice={apiData.show ? apiData.show.price : 'N/A'}
-                            showContent={apiData.show ? apiData.show.content : 'N/A'}    
+                            showName={show.show}
+                            showDate={show.date}
+                            showPrice={show.price}
+                            showContent={show.content}    
                         />
                     </div>
 
