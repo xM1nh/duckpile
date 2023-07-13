@@ -43,8 +43,6 @@ export const customer_detail = asyncHandler(async (req, res, next) => {
         }
     }
 
-    console.log(sales.rows)
-
     res.status(200).json(response)
 })
 
