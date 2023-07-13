@@ -16,6 +16,12 @@ import EditCustomerPage from "./pages/Customer/EditCustomerPage";
 import CreateSalePage from "./pages/Sale/CreateSalePage";
 import SaleDetailPage from "./pages/Sale/SaleDetailPage";
 import EditSalePage from "./pages/Sale/EditSalePage";
+import SupplierDetailPage from './pages/Supplier/SupplierDetailPage'
+import CreateSupplierPage from "./pages/Supplier/CreateSupplierPage";
+import EditSupplierPage from './pages/Supplier/EditSupplierPage'
+import PurchaseDetailPage from "./pages/Purchase/PurchaseDetailPage";
+import CreatePurchasePage from "./pages/Purchase/CreatePurchasePage";
+import EditPurchasePage from "./pages/Purchase/EditPurchasePage";
 
 
 const RouteSwitch = () => {
@@ -32,12 +38,18 @@ const RouteSwitch = () => {
                 <Route path='/customer/create' element={<CreateCustomerPage />} />
                 <Route path='/customer/:id/edit' element={<EditCustomerPage />} />
                 <Route path='/purchases' element={<PurchasePage />} />
+                <Route path='/purchase/:id' element={<PurchaseDetailPage />} />
+                <Route path='/purchase/create' element={<CreatePurchasePage />} />
+                <Route path='purchase/:id/edit' element={<EditPurchasePage />} />
                 <Route path='/sales' element={<SalesPage />} />
                 <Route path='/sale/:id' element={<SaleDetailPage />} />
                 <Route path='/sale/create' element ={<CreateSalePage />} />
                 <Route path='/sale/:id/edit' element={<EditSalePage />} />
                 <Route path='/inventory' element={<InventoryPage />} />
                 <Route path='/suppliers' element={<SupplierPage />} />
+                <Route path='/supplier/:id' element={<SupplierDetailPage />} />
+                <Route path='/supplier/create' element={<CreateSupplierPage />} />
+                <Route path='supplier/:id/edit' element={<EditSupplierPage />} />
             </Routes>
         </BrowserRouter>
     )
