@@ -4,11 +4,12 @@ import MainNavbar from '../../components/navbar/MainNavbar'
 import ButtonContainer from '../../components/buttons/ButtonContainer'
 import DeleteModal from '../../components/modal/DeleteModal'
 import useFetch from '../../hooks/useFetch'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
 const SaleDetailPage = () => {
     const {id} = useParams()
+    const navigate = useNavigate()
     const [modalOpen, setModalOpen] = useState(false)
 
     const [customer, setCustomer] = useState({})
@@ -28,7 +29,17 @@ const SaleDetailPage = () => {
     }
 
     const handleDelete = () => {
-        console.log('delete')
+        fetch(`/api/v1/sales/sale/${id}/delete`, {
+            method: 'POST'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.message === 'Success') {
+                console.log('Deleted')
+                setModalOpen(false)
+                navigate(-1)
+            }
+        })
     }
 
     useEffect(() => {
