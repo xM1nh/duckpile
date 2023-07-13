@@ -5,14 +5,28 @@ import Pagination from '../../components/pagination/Pagination'
 import usePagination from '../../hooks/usePagination'
 import useFetch from '../../hooks/useFetch'
 import ButtonContainer from '../../components/buttons/ButtonContainer'
+import { useEffect, useState } from 'react'
 
-const itemCount = 1000
 const itemNumPerPage = 10
 
 const SupplierPage = () => {
-    const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(itemCount, itemNumPerPage)
+    const [data, setData] = useState({
+        list: [],
+        count: 0
+    })
 
-    const {isLoading, apiData, serverErr} = useFetch('/api/v1/suppliers')
+    const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(data.count, itemNumPerPage)
+
+    const {isLoading, apiData, serverErr} = useFetch(`/api/v1/suppliers?page=${currentPage}&count=${itemNumPerPage}`)
+
+    useEffect(() => {
+        if (apiData) {
+            setData({
+                list: apiData.suppliers,
+                count: apiData.count
+            })
+        }
+    }, [apiData])
 
     return (
         <div className="page supplier">
@@ -24,7 +38,7 @@ const SupplierPage = () => {
                     <div className='supplier-list table'>
                         <Table 
                             header_array={['Name', 'Address', 'Phone Number']} 
-                            data_array={apiData}
+                            data_array={data.list}
                             mainData='supplier'/>
                     </div>
                     <Pagination 
@@ -36,7 +50,7 @@ const SupplierPage = () => {
                     />
                 </div>
 
-                <ButtonContainer add={true} addURL='/supplier/add' />
+                <ButtonContainer create={true} createURL='/supplier/create' />
             </main>
         </div>
     )

@@ -1,0 +1,46 @@
+.page.supplier-detail main {
+    grid-template-rows: 1fr 1fr 2fr;
+}
+
+.supplier-detail .info {
+    display: grid;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    padding-left: 20%;
+    padding-right: 20%;
+}
+
+.supplier-detail .info > div{
+    display: flex;
+}
+
+.supplier-detail .info .supplier-name {
+    font-size: 2em;
+    align-items: end;
+}
+
+.supplier-detail .info .supplier-phone {
+    align-items: center;
+    font-size: 1.5em;
+}
+
+.supplier-detail .info .supplier-address {
+    align-items: start;
+}
+
+.page.supplier-detail .supplier-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5%;
+    margin: 1%;
+}
+
+.page.supplier-detail .sales {
+    padding: 1%;
+    display: flex;
+    flex-direction: column;
+    gap: 1%;
+}
+
+.page.supplier-detail .sales h2 {
+    align-self: center;
+}

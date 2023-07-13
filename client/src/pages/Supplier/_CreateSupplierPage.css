@@ -1,0 +1,26 @@
+.page.create-supplier main {
+    grid-template-rows: 1fr;
+}
+
+.page.create-supplier form {
+    padding: 1% 10% 1% 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1%;
+}
+
+.page.create-supplier h1 {
+    align-self: center;
+}
+
+.page.create-supplier button {
+    width: 150px;
+    height: 50px;
+    align-self: center;
+    font-size: 2em;
+}
+
+.page.create-supplier input {
+    height: 30px;
+}
