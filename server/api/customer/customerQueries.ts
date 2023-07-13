@@ -27,7 +27,7 @@ export const customer_buy_detail = `SELECT
                                         sales.total_amount,
                                         payment_method,
                                         stores.store_name as store_name,
-                                        sales.staff as staff_name,
+                                        sales.staff,
                                         sales.id as sale_id
                                     FROM sales
                                         INNER JOIN stores ON sales.store = stores.id
