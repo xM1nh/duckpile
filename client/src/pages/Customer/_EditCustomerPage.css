@@ -1,0 +1,26 @@
+.page.edit-customer main {
+    grid-template-rows: 1fr;
+}
+
+.page.edit-customer form {
+    padding: 1% 10% 1% 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1%;
+}
+
+.page.edit-customer h1 {
+    align-self: center;
+}
+
+.page.edit-customer button {
+    width: 150px;
+    height: 50px;
+    align-self: center;
+    font-size: 2em;
+}
+
+.page.edit-customer input {
+    height: 30px;
+}

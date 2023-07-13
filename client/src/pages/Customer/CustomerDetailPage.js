@@ -3,12 +3,15 @@ import MainNavbar from '../../components/navbar/MainNavbar'
 import Table from '../../components/container/Table'
 import SummaryContainer from '../../components/container/SummaryContainer'
 import ButtonContainer from '../../components/buttons/ButtonContainer'
+import DeleteModal from '../../components/modal/DeleteModal'
 import useFetch from '../../hooks/useFetch'
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
 const CustomerDetailPage = () => {
     const {id} = useParams()
+    const navigate = useNavigate()
+    const [modalOpen, setModalOpen] = useState(false)
     const [customerData, setCustomerData] = useState({
         name: '',
         address: '',
@@ -22,6 +25,26 @@ const CustomerDetailPage = () => {
     })
 
     const {isLoading, apiData, serverErr} = useFetch(`/api/v1/customers/customer/${id}`)
+
+    const openModal = () => {
+        setModalOpen(true)
+    }
+
+    const closeModal = () => {
+        setModalOpen(false)
+    }
+
+    const handleDelete = () => {
+        fetch(`/api/v1/customers/customer/${id}/delete`, {
+            method: 'POST'
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log('deleted')
+            setModalOpen(false)
+            navigate('/customers')
+        })
+    }
     
     useEffect(() => {
         if (apiData) {
@@ -41,6 +64,7 @@ const CustomerDetailPage = () => {
 
     return (
         <div className='page customer-detail'>
+            {modalOpen && <DeleteModal handleCancelClick={closeModal} handleDeleteClick={handleDelete} />}
             <MainNavbar />
 
             <main>
@@ -69,6 +93,7 @@ const CustomerDetailPage = () => {
                         del={true}
                         createURL='/customer/create'
                         editURL={`/customer/${id}/edit`}
+                        handleDelete={openModal}
                     />
             </main>
         </div>
