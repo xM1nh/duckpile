@@ -1,0 +1,191 @@
+.create-purchase main {
+    grid-template-rows: 1fr
+}
+
+.create-purchase form {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 3fr) minmax(0, 0.5fr) minmax(0, 0.5fr);
+    padding: 0 10% 0 10%;
+}
+
+.create-purchase .supplier-info {
+    display: grid;
+    grid-template-areas: 
+    'title title title'
+    'name name phone'
+    'street street street'
+    'city state zip';
+    padding: 1%;
+    column-gap: 2%;
+    row-gap: 1%;
+}
+
+.create-purchase .supplier-info > div {
+    position: relative;
+}
+
+.create-purchase input {
+    width: 100%;
+}
+
+.create-purchase .supplier-info h1 {
+    grid-area: title;
+    text-align: center;
+}
+
+.create-purchase .supplier-info #name {
+    grid-area: name;
+}
+
+.create-purchase .supplier-info #phone {
+    grid-area: phone;
+}
+
+.create-purchase .supplier-info #street {
+    grid-area: street;
+}
+
+.create-purchase .supplier-info #city {
+    grid-area: city;
+}
+
+.create-purchase .supplier-info #state {
+    grid-area: state;
+}
+
+.create-purchase .supplier-info #zip {
+    grid-area: zip;
+}
+
+.create-purchase .product-info {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 10fr) minmax(0, 1fr);
+    padding: 1%;
+    margin: 5% 0 5% 0;
+}
+
+.create-purchase .product-info h1 {
+    justify-self: center;
+    text-align: center;
+}
+
+.create-purchase .product-info .input-section {
+    display: grid;
+    grid-template-columns: 7fr 2fr 1fr;
+    gap: 1%;
+}
+
+.create-purchase .product-info .product-selection {
+    position: relative;
+}
+
+.create-purchase .product-info .list-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    outline: 1px solid black;
+    margin-bottom: 1%;
+    overflow-y: scroll;
+}
+
+.create-purchase .product-info .list-section .total {
+    margin: 1%;
+    display: grid;
+    grid-template-columns: minmax(0, 9fr) minmax(0, 5fr);
+    font-size: 1.5em;
+    font-weight: bold;
+    gap: 800px;
+    border-top: 1px solid black ;
+}
+
+.create-purchase .product-info .list-section .total .amount {
+    padding-left: 5%;
+}
+
+.create-purchase .product-info .list-section .total .amount::before {
+    content: '$';
+}
+
+.create-purchase table {
+    font-size: 1.2em;
+
+}
+
+.create-purchase th:nth-child(5n+1) {
+    width: 50%;
+}
+
+.create-purchase .table-buttons .edit{
+    display: none;
+}
+
+.dropdown {
+    z-index: 1;
+    position: absolute;
+    background-color: white;
+    width: 100%;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    max-height: 200px;
+    overflow: scroll;
+}
+
+.dropdown > div {
+    height: 100%;
+    width: 100%;
+    padding: 0.5%;
+}
+
+.dropdown > div:hover {
+    background-color: rgba(0,0,0,0.2);
+}
+
+.create-purchase .purchase-info {
+    display: grid;
+    grid-template-areas: 
+        'title title title title'
+        'payment date staff store';
+    column-gap: 5%;
+}
+
+.create-purchase .purchase-info h1 {
+    grid-area: title;
+    text-align: center;
+}
+
+.create-purchase .purchase-info #staff {
+    grid-area: staff;
+}
+
+.create-purchase .purchase-info #store {
+    grid-area: store;
+    position: relative;
+}
+
+.create-purchase .purchase-info #date {
+    grid-area: date;
+}
+
+.create-purchase .purchase-info #payment {
+    grid-area: payment;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.create-purchase .submit {
+    width: 100px;
+    height: 50px;
+    font-size: 1.5em;
+    align-self: center;
+    justify-self: center;
+}
+
+.create-purchase .add {
+    height: 60%;
+    width: 80px;
+    font-size: 1.2em;
+    align-self: flex-end;
+    justify-self: center;
+}

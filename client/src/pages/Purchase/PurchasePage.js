@@ -6,35 +6,77 @@ import './_PurchasePage.css'
 import Table from "../../components/container/Table"
 import SummaryContainer from '../../components/container/SummaryContainer'
 import ButtonContainer from '../../components/buttons/ButtonContainer'
+import DeleteModal from '../../components/modal/DeleteModal'
+import { useEffect, useState } from 'react'
 
 const itemNumPerPage = 10
-const itemCount = 9
 
-const ProductListPage = () => { 
-    const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(itemCount, itemNumPerPage)
+const PurchasePage = () => { 
+    const [deleteItem, setDeleteItem] = useState(null)
+    const [data, setData] = useState({
+        summary: [],
+        count: '',
+        mostBuyedProduct: '',
+        mostBuyedCustomer: '',
+    })
 
-    var url = `/api/v1/purchases/${currentPage}/${itemNumPerPage}`
+    const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(data.count, itemNumPerPage)
+    const [modalOpen, setModalOpen] = useState(false)
 
+    var url = `/api/v1/purchases?page=${currentPage}&count=${itemNumPerPage}`
     const {isLoading, apiData, serverErr} = useFetch(url)
 
+    const openModal = (e) => {
+        setModalOpen(true)
+        setDeleteItem(e.target.id)
+    }
+
+    const closeModal = () => {
+        setModalOpen(false)
+        setDeleteItem(null)
+    }
+
+    const handleDelete = () => {
+        fetch(`/api/v1/purchases/purchase/${deleteItem}/delete`, {
+            method: 'POST'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.message === 'Success') {
+                console.log('Deleted')
+                setModalOpen(false)
+                setDeleteItem(null)
+                window.location.reload()
+            }
+        })
+    }
+
+    useEffect(() => {
+        if (apiData) {
+            setData(apiData)
+        }
+    }, [apiData])
+
     return (
-        <div className='page purchase'>
+        <div className='page purchases'>
+            {modalOpen && <DeleteModal handleCancelClick={closeModal} handleDeleteClick={handleDelete}/>}
             <MainNavbar />
 
             <main>
                 <section className="summary">
-                    <SummaryContainer />
-                    <SummaryContainer />
-                    <SummaryContainer />
+                    <SummaryContainer data_to_show={data.count} text_to_show='Total Purchases'/>
+                    <SummaryContainer data_to_show={data.mostPurchasedProduct} text_to_show='Most Purchased Product'/>
+                    <SummaryContainer data_to_show={data.mostPurchasedSupplier} text_to_show='Most Purchased Supplier'/>
                 </section>
-                <section className="recent-purchase">
-                    <div className="purchase-table">
-                        <div className="purchase-table-title">Recent Purchases</div>
-                        <div className="purchase-table-content">
+                <section className="recent-purchases">
+                    <div className="purchases-table">
+                        <div className="purchases-table-title">Recent purchases</div>
+                        <div className="purchases-table-content">
                             <Table 
-                                header_array={['Code', 'Purchased Date', 'Item', 'Quantity', 'Store', 'Supplier', 'Staff']}
-                                data_array={apiData}
+                                header_array={['Products','Code', 'Purchase Date', 'Total Amount', 'Supplier', 'Store', 'Staff']}
+                                data_array={data.summary}
                                 mainData='purchase'
+                                handleDelete={openModal}
                             />
                         </div>
 
@@ -48,10 +90,10 @@ const ProductListPage = () => {
                     </div>
                 </section>
 
-                <ButtonContainer add={true} addURL='/purchase/add' />
+                <ButtonContainer create={true} createURL='/purchase/create' />
             </main>
         </div>
     )
 }
 
-export default ProductListPage
+export default PurchasePage

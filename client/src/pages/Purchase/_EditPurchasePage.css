@@ -1,0 +1,191 @@
+.edit-purchase main {
+    grid-template-rows: 1fr
+}
+
+.edit-purchase form {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 3fr) minmax(0, 0.5fr) minmax(0, 0.5fr);
+    padding: 0 10% 0 10%;
+}
+
+.edit-purchase .supplier-info {
+    display: grid;
+    grid-template-areas: 
+    'title title title'
+    'name name phone'
+    'street street street'
+    'city state zip';
+    padding: 1%;
+    column-gap: 2%;
+    row-gap: 1%;
+}
+
+.edit-purchase .supplier-info > div {
+    position: relative;
+}
+
+.edit-purchase input {
+    width: 100%;
+}
+
+.edit-purchase .supplier-info h1 {
+    grid-area: title;
+    text-align: center;
+}
+
+.edit-purchase .supplier-info #name {
+    grid-area: name;
+}
+
+.edit-purchase .supplier-info #phone {
+    grid-area: phone;
+}
+
+.edit-purchase .supplier-info #street {
+    grid-area: street;
+}
+
+.edit-purchase .supplier-info #city {
+    grid-area: city;
+}
+
+.edit-purchase .supplier-info #state {
+    grid-area: state;
+}
+
+.edit-purchase .supplier-info #zip {
+    grid-area: zip;
+}
+
+.edit-purchase .product-info {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 10fr) minmax(0, 1fr);
+    padding: 1%;
+    margin: 5% 0 5% 0;
+}
+
+.edit-purchase .product-info h1 {
+    justify-self: center;
+    text-align: center;
+}
+
+.edit-purchase .product-info .input-section {
+    display: grid;
+    grid-template-columns: 7fr 2fr 1fr;
+    gap: 1%;
+}
+
+.edit-purchase .product-info .product-selection {
+    position: relative;
+}
+
+.edit-purchase .product-info .list-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    outline: 1px solid black;
+    margin-bottom: 1%;
+    overflow-y: scroll;
+}
+
+.edit-purchase .product-info .list-section .total {
+    margin: 1%;
+    display: grid;
+    grid-template-columns: minmax(0, 9fr) minmax(0, 5fr);
+    font-size: 1.5em;
+    font-weight: bold;
+    gap: 800px;
+    border-top: 1px solid black ;
+}
+
+.edit-purchase .product-info .list-section .total .amount {
+    padding-left: 5%;
+}
+
+.edit-purchase .product-info .list-section .total .amount::before {
+    content: '$';
+}
+
+.edit-purchase table {
+    font-size: 1.2em;
+
+}
+
+.edit-purchase th:nth-child(5n+1) {
+    width: 50%;
+}
+
+.edit-purchase .table-buttons .edit{
+    display: none;
+}
+
+.dropdown {
+    z-index: 1;
+    position: absolute;
+    background-color: white;
+    width: 100%;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    max-height: 200px;
+    overflow: scroll;
+}
+
+.dropdown > div {
+    height: 100%;
+    width: 100%;
+    padding: 0.5%;
+}
+
+.dropdown > div:hover {
+    background-color: rgba(0,0,0,0.2);
+}
+
+.edit-purchase .purchase-info {
+    display: grid;
+    grid-template-areas: 
+        'title title title'
+        'date staff store';
+    column-gap: 5%;
+}
+
+.edit-purchase .purchase-info h1 {
+    grid-area: title;
+    text-align: center;
+}
+
+.edit-purchase .purchase-info #staff {
+    grid-area: staff;
+}
+
+.edit-purchase .purchase-info #store {
+    grid-area: store;
+    position: relative;
+}
+
+.edit-purchase .purchase-info #date {
+    grid-area: date;
+}
+
+.edit-purchase .purchase-info #payment {
+    grid-area: payment;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-purchase .submit {
+    width: 100px;
+    height: 50px;
+    font-size: 1.5em;
+    align-self: center;
+    justify-self: center;
+}
+
+.edit-purchase .add {
+    height: 60%;
+    width: 80px;
+    font-size: 1.2em;
+    align-self: flex-end;
+    justify-self: center;
+}

@@ -1,8 +1,8 @@
-.page.purchase main {
+.page.purchases_list main {
     grid-template-rows: 1fr 4fr;
 }
 
-.purchase > main >.summary {
+.purchases > main > .summary {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     outline: 1px solid black;
@@ -10,17 +10,21 @@
     gap: 1%;
 }
 
-.purchase-table-title {
+.purchases main .container-data.value.summary {
+    font-size: 4em;
+}
+
+.purchases-table-title {
     text-align: center;
     padding: 20px;
     font-size: 2em;
 }
 
-.purchase-table {
+.purchases-table {
     margin: 10px;
 }
 
-.purchase-table-content {
+.purchases-table-content {
     outline: 1px solid black;
     overflow-x: scroll;
     overflow-y: scroll;

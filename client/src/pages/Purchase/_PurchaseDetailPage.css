@@ -1,0 +1,138 @@
+.purchase-detail main {
+    grid-template-rows: minmax(0, 1fr) minmax(0, 4fr) minmax(0, 1fr);
+}
+
+.purchase-detail .supplier-info {
+    display: grid;
+    grid-template-areas: 
+    'title title title'
+    'name name phone'
+    'address address address'
+;
+    padding: 1%;
+    column-gap: 2%;
+    row-gap: 1%;
+}
+
+.purchase-detail .label {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.purchase-detail .value {
+    font-size: 1.5em;
+    border-bottom: 1px solid black;
+}
+
+.purchase-detail .supplier-info > div {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 15px
+}
+
+.purchase-detail .supplier-info h1 {
+    grid-area: title;
+    text-align: center;
+}
+
+.purchase-detail .supplier-info #name {
+    grid-area: name;
+}
+
+.purchase-detail .supplier-info #phone {
+    grid-area: phone;
+}
+
+.purchase-detail .supplier-info #address {
+    grid-area: address;
+}
+
+.purchase-detail .product-info {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 5fr);
+    padding: 1%;
+}
+
+.purchase-detail .product-info h1 {
+    justify-self: center;
+    text-align: center;
+}
+
+.purchase-detail .product-info .product-selection {
+    position: relative;
+}
+
+.purchase-detail .product-info .list-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    outline: 1px solid black;
+    margin-bottom: 1%;
+    overflow-y: scroll;
+}
+
+.purchase-detail .product-info .list-section .total {
+    margin: 1%;
+    display: grid;
+    grid-template-columns: minmax(0, 9fr) minmax(0, 5fr);
+    font-size: 1.5em;
+    font-weight: bold;
+    gap: 800px;
+    border-top: 1px solid black ;
+}
+
+.purchase-detail .product-info .list-section .total .amount {
+    padding-left: 5%;
+}
+
+.purchase-detail .product-info .list-section .total .amount::before {
+    content: '$';
+}
+
+.purchase-detail table {
+    font-size: 1.2em;
+
+}
+
+.purchase-detail th:nth-child(odd) {
+    width: 90%;
+}
+
+.purchase-detail .table-buttons{
+    display: none;
+}
+
+.purchase-detail .purchase-info {
+    display: grid;
+    grid-template-areas: 
+        'title title title'
+        'date staff store';
+    column-gap: 5%;
+    padding-bottom: 1%;
+}
+
+.purchase-detail .purchase-info > div {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+}
+
+.purchase-detail .purchase-info h1 {
+    grid-area: title;
+    text-align: center;
+}
+
+.purchase-detail .purchase-info #staff {
+    grid-area: staff;
+}
+
+.purchase-detail .purchase-info #store {
+    grid-area: store;
+    position: relative;
+}
+
+.purchase-detail .purchase-info #date {
+    grid-area: date;
+}
