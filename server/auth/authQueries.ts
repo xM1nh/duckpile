@@ -1,0 +1,1 @@
+export const findOne = `SELECT * FROM users WHERE username = $1`
