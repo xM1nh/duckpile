@@ -1,5 +1,5 @@
 import { body, validationResult } from 'express-validator'
-import pool from '../../database'
+import pool from '../../config/dbConfig'
 import * as product_queries from './productQueries'
 import asyncHandler from 'express-async-handler'
 import path from 'path'

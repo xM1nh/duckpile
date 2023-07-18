@@ -1,4 +1,4 @@
-import pool from '../../database'
+import pool from '../../config/dbConfig'
 import * as image_queries from './imageQueries'
 import asyncHandler from 'express-async-handler'
 import { uploadMulti } from '../../middleware/multerHelper'

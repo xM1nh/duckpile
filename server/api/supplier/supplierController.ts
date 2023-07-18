@@ -1,4 +1,4 @@
-import pool from '../../database'
+import pool from '../../config/dbConfig'
 import * as supplier_queries from './supplierQueries'
 import asyncHandler from 'express-async-handler'
 import { body, validationResult } from 'express-validator'

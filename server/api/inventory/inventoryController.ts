@@ -1,4 +1,4 @@
-import pool from '../../database'
+import pool from '../../config/dbConfig'
 import * as inventory_queries from './inventoryQueries'
 import asyncHandler from 'express-async-handler'
 

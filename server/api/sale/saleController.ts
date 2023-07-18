@@ -1,4 +1,4 @@
-import pool from '../../database'
+import pool from '../../config/dbConfig'
 import * as sale_queries from './saleQueries'
 import {get_all_customers, customer_create, customer_update} from '../customer/customerQueries'
 import asyncHandler from 'express-async-handler'

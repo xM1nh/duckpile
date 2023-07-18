@@ -1,4 +1,4 @@
-import pool from '../../database'
+import pool from '../../config/dbConfig'
 import * as staff_queries from './staffQueries'
 import asyncHandler from 'express-async-handler'
 
