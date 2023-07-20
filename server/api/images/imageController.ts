@@ -27,8 +27,8 @@ export const image_create_post = [
             filePaths = files.map(file => file.path)
         }
 
-        const create_images = await pool.query(image_queries.image_create, [productID, filePaths])
-        res.status(200).json({message: 'Success'})
+        await pool.query(image_queries.image_create, [productID, filePaths])
+        res.status(200).json({message: 'Success', productID})
     })
 ]
 
