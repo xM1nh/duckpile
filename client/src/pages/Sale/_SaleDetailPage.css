@@ -95,8 +95,8 @@
 
 }
 
-.sale-detail th:nth-child(odd) {
-    width: 90%;
+.sale-detail th:nth-child(3n+1) {
+    width: 70%;
 }
 
 .sale-detail .table-buttons{

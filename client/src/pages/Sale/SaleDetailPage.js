@@ -76,7 +76,7 @@ const SaleDetailPage = () => {
                 <div className='product-info'>
                     <h1>Details</h1>
                     <div className='list-section'>
-                        <Table header_array={['Product', 'Quantity']} data_array={product.products} mainData='product'/>
+                        <Table header_array={['Product', 'Price per unit', 'Quantity']} data_array={product.products} mainData='product'/>
                         <div className='total'>
                             <div className='title'>Total</div>
                             <div className='amount'>{product.totalAmount}</div>

@@ -29,6 +29,11 @@
     border-right: 1px solid black;
     display: flex;
     justify-content: center;
+    object-fit: contain;
+}
+
+.show-item-container .item-image img {
+    max-height: 140px;
 }
 
 .show-item-container .show-name {

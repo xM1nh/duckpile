@@ -1,13 +1,11 @@
 .page.product-detail-page main {
     display: grid;
     grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr);
-    min-height: 0;
-    min-width: 0;
 }
 
 .product-detail.info {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0,1fr);
     padding: 1% 10% 1% 10%;
     gap: 1%;
 }
@@ -15,36 +13,41 @@
 .product-detail-image-container {
     border-right: 2px solid black;
     display: grid;
-    grid-template-columns: 1fr 3fr;
-    min-height: 0;
-    max-height: 100%;
+    grid-template-columns: minmax(0, 1fr) minmax(0,3fr);
     gap: 3%;
+    overflow: hidden;
 }
 
 .product-detail-image-container .image-list {
     border-right: 1px solid rgba(0,0,0,0.3);
+    display: grid;
+    grid-template-rows: repeat(autofill, 1fr);
+    gap: 2%;
     overflow-y: scroll;
+    overscroll-behavior-y: contain;
 }
 
 .product-detail-image-container .image-list > img {
     object-fit: contain;
-    width: 100%;
+    width: 60%;
 }
 
 .product-detail-image-container .main-image {
+    max-height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
-.product-detail-image-container .main-image > img {
-    height: 100%;
-    object-fit: fill;
+.product-detail-image-container .main-image img {
+    max-height: 100%;
+    object-fit: contain;
 }
 
 .product-detail-info-container {
     display: grid;
-    grid-template-rows: 2fr 2fr 1fr 1fr 1fr;
+    grid-template-rows: minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr);
     padding: 1%;
 }
 
@@ -55,7 +58,7 @@
 
 .product-detail-info-container .price {
     display: flex;
-    gap: 10%
+    gap: 10%;
 }
 
 .product-detail-name {
