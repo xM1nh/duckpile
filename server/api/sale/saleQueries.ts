@@ -1,7 +1,7 @@
 export const get_all_sales = `SELECT 
                                     sales.id as sale_name,
-                                    to_char(sales.sale_date, 'MM-DD-YYYY'),
-                                    array(select concat(products.name,',',sale_products.quantity)
+                                    to_char(sales.sale_date, 'MM-DD-YYYY') as sale_date,
+                                    array(select concat(products.name, ',', sale_products.quantity, ',', products.price, ',', products.id)
                                         from sale_products
                                             inner join products on sale_products.product_id = products.id
                                         where sale_products.sale_id = sales.id) as products,

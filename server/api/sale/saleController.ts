@@ -17,10 +17,10 @@ export const sale_list = asyncHandler(async (req, res, next) => {
     const response = sales.rows.map((row: {products: string[]}) => {
         var {products, ...rest} = row
         let result: string = ''
-        row.products.forEach(product => {
-            const name = product.split(',')[0]
+        products.forEach(product => {
+            const product_name = product.split(',')[0]
             const quantity = product.split(',')[1]
-            const value = quantity + 'x' + ' ' + name + ', '
+            const value = quantity + 'x' + ' ' + product_name + ', '
             result += value
         })
         return {result, ...rest}
@@ -42,8 +42,9 @@ export const sale_detail = asyncHandler(async (req, res, next) => {
             products: sale.rows[0].products.map((product: string) => {
                 const product_name = product.split(',')[0]
                 const quantity = product.split(',')[1]
-                const product_id = product.split(',')[2]
-                return ({product_name, quantity, product_id})
+                const product_price = product.split(',')[2]
+                const product_id = product.split(',')[3]
+                return ({product_name, product_price, quantity, product_id})
             }),
             totalAmount: sale.rows[0].total_amount,
             paymentMethod: sale.rows[0].payment_method
@@ -131,6 +132,7 @@ export const sale_create_post = [
             let message = ''
 
             try {
+                await client.query('BEGIN')
                 if (!sale.customer.id) {
                     if (sale.customer.phone_number) {
                         const customer = await client.query(customer_create, [
@@ -162,6 +164,8 @@ export const sale_create_post = [
                 sale.products.forEach(async (product: {id: Number, quantity: Number}) => {
                     await client.query(`INSERT INTO sale_products (sale_id, product_id, quantity) VALUES ($1, $2, $3)`, [saleID.rows[0].id, product.id, product.quantity])
                 })
+                await client.query('COMMIT')
+
                 res.status(200).json({id: saleID.rows[0].id, message: message})
             } catch (err) {
                 await client.query('ROLLBACK')
@@ -294,6 +298,7 @@ export const sale_update_post = [
             const client = await pool.connect()
 
             try {
+                await client.query('BEGIN')
                 await client.query(customer_update, [
                     sale.customer.first_name,
                     sale.customer.last_name,
@@ -310,7 +315,7 @@ export const sale_update_post = [
                 sale.products.forEach(async (product: {id: Number, quantity: Number}) => {
                     await client.query(`INSERT INTO sale_products (sale_id, product_id, quantity) VALUES ($1, $2, $3)`, [id, product.id, product.quantity])
                 })
-
+                await client.query('COMMIT')
                 res.status(200).json({message: 'Success'})
             } catch (err) {
                 await client.query('ROLLBACK')
