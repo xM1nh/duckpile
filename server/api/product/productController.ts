@@ -4,6 +4,8 @@ import * as product_queries from './productQueries'
 import asyncHandler from 'express-async-handler'
 import path from 'path'
 import fs from 'fs'
+import { image_create } from '../images/imageQueries'
+import { uploadMulti } from '../../middleware/multerHelper'
 
 export const product_list = asyncHandler(async (req, res, next) => {
     const pagination = {
@@ -41,10 +43,32 @@ export const product_detail = asyncHandler(async (req, res, next) => {
                     })
                     : []
     
-    res.status(200).json({general: general.rows[0], images: imgUrl, inventory: '', sales: sales.rows, purchases: purchase.rows, show: show.rows[0]})
+    let lastestShow = {
+        show: 'N/A',
+        date: 'N/A',
+        price: 'N/A',
+        content: 'N/A'
+    }
+    if (show.rows[0]) {
+        lastestShow = show.rows[0]
+    }
+    
+    res.status(200).json({general: general.rows[0], images: imgUrl, inventory: '', sales: sales.rows, purchases: purchase.rows, show: lastestShow})
+})
+
+export const product_create_get = asyncHandler(async (req, res, next) => {
+    const suppliers = await pool.query(`SELECT 
+                                            name as supplier_name,
+                                            street || ', ' || city || ', ' || state || ' ' || zip as address,
+                                            phone_number,
+                                            suppliers.id as supplier_id
+                                        FROM suppliers`)
+    res.status(200).json({suppliers: suppliers.rows})
 })
 
 export const product_create_post = [
+    uploadMulti.array('images'),
+
     body('name', 'Product name must not be empty.')
         .trim()
         .isLength({min: 1})
@@ -102,13 +126,54 @@ export const product_create_post = [
         if(!errors.isEmpty()) {
             res.status(400).json(errors)
         } else {
-            //This will return the newly created product's id
-            const create_product = await pool.query(product_queries.product_create, [product.name, product.type, product.brand, product.supplier, product.sku, product.content, product.expDate, product.price, product.discount])
-            const productID = create_product.rows[0].id
+            const client = await pool.connect()
 
-            res.status(200).json({message: 'Success', productID})
+            try {
+                await client.query('BEGIN')
+                const create_product = await client.query(product_queries.product_create, [product.name, product.type, product.brand, product.supplier, product.sku, product.content, product.expDate, product.price, product.discount, product.store1_inv, product.store2_inv, product.store3_inv])
+                const productId = create_product.rows[0].id
+
+                var filePaths: string[] = []
+                if (req.files) {
+                    const files = req.files as Express.Multer.File[]
+                    const tempPath = files[0].destination
+
+                    try {
+                        const newPath = `./uploads/${productId}`
+                        fs.renameSync(tempPath, newPath)
+                    } catch (err) {
+                        fs.rmSync('./uploads/temp', { recursive: true, force: true })
+                        throw(err)
+                    }
+
+                    filePaths = files.map(file => {
+                        return file.path.replace('temp', `${productId}`)
+                    })
+                }
+
+                await client.query(image_create, [productId, filePaths])
+
+                await client.query('COMMIT')
+
+                res.status(200).json({message: 'Success', productId})
+            } catch (err) {
+                await client.query('ROLLBACK')
+
+                //Removed the newly added directory
+                //Newly added directory can be named 'temp' or `${productId}`
+                //depends on where the try block fails.
+                const uploads = fs.readdirSync('./uploads')
+                const latestDir = uploads.sort((a, b) => {
+                    return fs.statSync('./upload' + a).mtime.getTime() - fs.statSync('./upload' + b).mtime.getTime()
+                })[0]
+                fs.rmSync(latestDir, { recursive: true, force: true })
+                
+                res.status(500).json({error: err})
+            } finally {
+                client.release()
+            }
         }
-    })
+    }),
 ]
 
 export const product_delete_post = asyncHandler(async (req, res, next) => {

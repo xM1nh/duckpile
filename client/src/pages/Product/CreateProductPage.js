@@ -6,12 +6,11 @@ import MainNavBar from '../../components/navbar/MainNavbar'
 import { useNavigate } from 'react-router-dom'
 
 const CreateProductForm = () => {
-    const {isLoading, apiData, serverErr} = useFetch('/api/v1/suppliers')
+    const {isLoading, apiData, serverErr} = useFetch('/api/v1/products/create')
     const navigate = useNavigate()
     const [mainImage, setMainImage] = useState(null)
     const [blob, setBlob] = useState([])
     const [err, setErr] = useState(null)
-    const [imageData, setImageData] = useState([])
     const [info, setInfo] = useState({
         name: '',
         type: '',
@@ -24,9 +23,9 @@ const CreateProductForm = () => {
         content: '',
         store1_inv: 0,
         store2_inv: 0,
-        store3_inv:0
+        store3_inv:0,
+        imageData: []
     })
-
 
     const handleImageInput = (e) => {
         const dataRaw = []
@@ -38,7 +37,10 @@ const CreateProductForm = () => {
         }
         setMainImage(dataBlob[0])
         setBlob([...dataBlob])
-        setImageData([...dataRaw])
+        setInfo((prevState) => ({
+            ...prevState,
+            imageData: [...dataRaw]
+        }))
     }
 
     const handleImageClick = (e) => {
@@ -56,16 +58,15 @@ const CreateProductForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         const formData = new FormData();
-        imageData.forEach(img => {
-            formData.append('images', img)
-        })
+        for (const [key, value] of Object.entries(info)) {
+            if (key === 'imageData') {
+                info[key].forEach(img => formData.append(`images`, img))
+            } else formData.append(key, value)
+        }
             
         fetch('/api/v1/products/create', {
             method: 'POST',
-            headers: {
-                'Content-Type':'application/json'
-            },
-            body: JSON.stringify(info),
+            body: formData,
         })
         .then(res => res.json())
         .then(data => {
@@ -74,44 +75,9 @@ const CreateProductForm = () => {
                 console.log(err)
             }
             else if (data.message === 'Success') {
-                return data.productID
+                navigate(`/product/${data.productId}`)
             }
         })
-        .then(productID => {
-            fetch(`/api/v1/uploads/${productID}/image/create`, {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-                if (data.errors) {
-                    setErr(data.errors)
-                    console.log(err)
-                }
-                else if (data.message === 'Success') {
-                    e.target.reset()
-                    setMainImage(null)
-                    setBlob([])
-                    setInfo({
-                        name: '',
-                        type: '',
-                        brand: '',
-                        sku: '',
-                        supplier: 1,
-                        price: '',
-                        discount: '',
-                        expDate: '',
-                        content: '',
-                        store1_inv: 0,
-                        store2_inv: 0,
-                        store3_inv:0
-                    })
-                    navigate(`/product/${productID}`)
-                }
-            })
-        }
-        ).catch(err => console.error('Error uploading:', err))
     }
 
     useEffect(() => {
@@ -129,9 +95,9 @@ const CreateProductForm = () => {
             content: '',
             store1_inv: 0,
             store2_inv: 0,
-            store3_inv:0
+            store3_inv:0,
+            imageData: []
         })
-        setImageData([])
     }, [])
 
     return (
@@ -174,7 +140,7 @@ const CreateProductForm = () => {
                         <label htmlFor='supplier'>Supplier:</label>
                         <select name='supplier' onChange={handleChange}>
                             {apiData 
-                                && apiData.map((supplier, i) => {
+                                && apiData.suppliers.map((supplier, i) => {
                                     return (
                                         <option value={supplier.supplier_id} key={i}>{supplier.supplier_name}</option>
                                     )
