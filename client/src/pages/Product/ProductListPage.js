@@ -1,33 +1,33 @@
 import MainNavbar from "../../components/navbar/MainNavbar"
 import Pagination from "../../components/pagination/Pagination"
-import useFetch from '../../hooks/useFetch'
 import usePagination from "../../hooks/usePagination"
 import './_ProductListPage.css'
 import Table from "../../components/container/Table"
 import SummaryContainer from "../../components/container/SummaryContainer"
 import ButtonContainer from "../../components/buttons/ButtonContainer"
 import DeleteModal from "../../components/modal/DeleteModal"
-import { useState, useEffect } from "react"
-
-const itemNumPerPage = 10
+import { useEffect, useState} from "react"
+import Spinner from "../../components/spinner/Spinner"
+import { useGetProductsQuery } from "../../features/products/productsApiSlice"
 
 const ProductListPage = () => { 
-    const [data, setData] = useState({
-        list: [],
-        count: 0
-    })
+    const [count, setCount] = useState(0)
+    const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(count, 25)
+    const {
+        data: products,
+        isLoading,
+        isSuccess,
+        isError,
+        error
+    } = useGetProductsQuery(currentPage)
+    
     const [openModal, setOpenModal] = useState(false)
     const [deleteItem, setDeleteItem] = useState(null)
-    
-    const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(data.count, itemNumPerPage)
-    const url = `/api/v1/products?page=${currentPage}&count=${itemNumPerPage}`
-    const {isLoading, apiData, serverErr} = useFetch(url)
 
     const tableOpenModal = (e) => {
         setOpenModal(true)
         setDeleteItem(e.target.id)
     }
-
     const closeModal = () => {
         setOpenModal(false)
         setDeleteItem(null)
@@ -48,49 +48,56 @@ const ProductListPage = () => {
         })
     }
 
+    let content
+
+    if (isLoading) content = <Spinner />
+
+    if (isSuccess) {
+        const { ids, entities } = products
+        const tableContents = ids?.length
+            ? ids.map(id => entities[id])
+            : []
+        content = <main>
+                        <section className="summary">
+                            <SummaryContainer data_to_show={count} text_to_show='Total Products'/>
+                            <SummaryContainer />
+                            <SummaryContainer />
+                        </section>
+                        <section className="product_list">
+                            <div className="product-table">
+                                <div className="table-title products">All Products</div>
+                                <div className="product-table-content">
+                                    <Table
+                                        mainData='product' 
+                                        header_array={['Image', 'Name', 'Type', 'Brand', 'Supplier', 'SKU', 'Content', 'Expire Date', 'Price', 'Discount', 'Store 1 Inventory', 'Store 2 Inventory', 'Store 3 Inventory']}
+                                        data_array={tableContents}
+                                        handleDelete={tableOpenModal}
+                                    />
+                                </div>
+
+                                <Pagination 
+                                    currentPage={currentPage} 
+                                    pageCount={pageCount}
+                                    handleNext={handleNext}
+                                    handlePrev={handlePrev}
+                                    handlePage={handlePage}
+                                />
+                            </div>
+                        </section>
+                    
+                    <ButtonContainer create={true} createURL='/product/create'/>
+                </main>
+    }
+
     useEffect(() => {
-        if (apiData) {
-            setData({
-                list: apiData.products,
-                count: apiData.count
-            })
-        }
-    }, [apiData])
+        if (products) setCount(products.ids.length)
+    }, [products])
 
     return (
         <div className='page product_list'>
             {openModal && <DeleteModal handleCancelClick={closeModal} handleDeleteClick={handleDelete}/>}
-            <MainNavbar />
-            <main>
-                <section className="summary">
-                    <SummaryContainer data_to_show={data.count} text_to_show='Total Products'/>
-                    <SummaryContainer />
-                    <SummaryContainer />
-                </section>
-                <section className="product_list">
-                    <div className="product-table">
-                        <div className="table-title products">All Products</div>
-                        <div className="product-table-content">
-                            <Table
-                                mainData='product' 
-                                header_array={['Image', 'Name', 'Type', 'Brand', 'Supplier', 'SKU', 'Content', 'Expire Date', 'Price', 'Discount', 'Store 1 Inventory', 'Store 2 Inventory', 'Store 3 Inventory']}
-                                data_array={data.list}
-                                handleDelete={tableOpenModal}
-                            />
-                        </div>
-
-                        <Pagination 
-                            currentPage={currentPage} 
-                            pageCount={pageCount}
-                            handleNext={handleNext}
-                            handlePrev={handlePrev}
-                            handlePage={handlePage}
-                        />
-                    </div>
-                </section>
-            
-            <ButtonContainer create={true} createURL='/product/create'/>
-            </main>
+            {isSuccess && <MainNavbar />}
+            {content}
         </div>
     )
 }

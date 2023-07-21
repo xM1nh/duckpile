@@ -1,22 +1,24 @@
-import {useEffect, useState} from 'react'
 import './_CreateProductForm.css'
-import useFetch from '../../hooks/useFetch'
-import FormInput from '../../components/forms/FormInput'
-import MainNavBar from '../../components/navbar/MainNavbar'
+
+import {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { useAddNewProductPostMutation } from '../../features/products/productsApiSlice'
+import { useGetSuppliersQuery } from '../../features/suppliers/suppliersApiSlice'
+
+import FormInput from '../../components/forms/FormInput'
+import MainNavBar from '../../components/navbar/MainNavbar'
+
 const CreateProductForm = () => {
-    const {isLoading, apiData, serverErr} = useFetch('/api/v1/products/create')
     const navigate = useNavigate()
     const [mainImage, setMainImage] = useState(null)
     const [blob, setBlob] = useState([])
-    const [err, setErr] = useState(null)
     const [info, setInfo] = useState({
         name: '',
         type: '',
         brand: '',
         sku: '',
-        supplier: 1, //Default value for supplier is 1
+        supplier: '',
         price: '',
         discount: '',
         expDate: '',
@@ -26,6 +28,24 @@ const CreateProductForm = () => {
         store3_inv:0,
         imageData: []
     })
+
+    const [addNewPost, {isLoading}] = useAddNewProductPostMutation()
+
+    const {
+        data: suppliers,
+        isSuccess: suppliersIsSuccess,
+    } = useGetSuppliersQuery()
+
+    let dropdown = []
+    if (suppliersIsSuccess) {
+        dropdown = suppliers.ids.map((id, i) => 
+                            <option value={id} key={i}>
+                                {suppliers.entities[id].supplier_name}
+                            </option>
+        )
+    }
+
+    const canSave = [info.name, info.price].every(Boolean)
 
     const handleImageInput = (e) => {
         const dataRaw = []
@@ -55,7 +75,7 @@ const CreateProductForm = () => {
         }))
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         const formData = new FormData();
         for (const [key, value] of Object.entries(info)) {
@@ -64,20 +84,31 @@ const CreateProductForm = () => {
             } else formData.append(key, value)
         }
             
-        fetch('/api/v1/products/create', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.errors) {
-                setErr(data.errors)
-                console.log(err)
+        if (canSave) {
+            try {
+                const { productId } = await addNewPost(formData).unwrap()
+                e.target.reset()
+                    setMainImage(null)
+                    setBlob([])
+                    setInfo({
+                        name: '',
+                        type: '',
+                        brand: '',
+                        sku: '',
+                        supplier: '',
+                        price: '',
+                        discount: '',
+                        expDate: '',
+                        content: '',
+                        store1_inv: 0,
+                        store2_inv: 0,
+                        store3_inv:0
+                    })
+                    navigate(`/product/${productId}`)
+            } catch (err) {
+                console.error(err)
             }
-            else if (data.message === 'Success') {
-                navigate(`/product/${data.productId}`)
-            }
-        })
+        }
     }
 
     useEffect(() => {
@@ -139,12 +170,8 @@ const CreateProductForm = () => {
                     <div className='product-supplier'>
                         <label htmlFor='supplier'>Supplier:</label>
                         <select name='supplier' onChange={handleChange}>
-                            {apiData 
-                                && apiData.suppliers.map((supplier, i) => {
-                                    return (
-                                        <option value={supplier.supplier_id} key={i}>{supplier.supplier_name}</option>
-                                    )
-                                })}
+                            <option value=''></option>
+                            {dropdown}
                         </select>
                     </div>
                    
@@ -157,7 +184,7 @@ const CreateProductForm = () => {
                     <FormInput id='store2-inv' label='Store 2 Inventory' input='store2_inv' inputType='number' handleChange={handleChange}></FormInput>
                     <FormInput id='store3-inv' label='Store 3 Inventory' input='store3_inv' inputType='number' handleChange={handleChange}></FormInput>
 
-                    <button className='product-create-submit' type='submit'>Create Product</button>
+                    <button className='product-create-submit' type='submit' disabled={!canSave}>Create Product</button>
                 </form>
             </div>
         </div>
