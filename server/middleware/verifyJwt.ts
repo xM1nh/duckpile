@@ -7,7 +7,7 @@ interface CustomRequestType extends Request {
 
 const veriyfJwt = (req: CustomRequestType, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization || <string>req.headers.Authorization
-
+    
     if (!authHeader?.startsWith('Bearer ')) return res.status(401).json({message: 'Unauthorized'})
 
     const token = authHeader.split(' ')[1]

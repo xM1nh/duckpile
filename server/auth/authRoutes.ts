@@ -12,3 +12,5 @@ router.get('/refresh', auth_controller.refresh)
 
 //Logout
 router.post('/logout', auth_controller.logout)
+
+export = router
