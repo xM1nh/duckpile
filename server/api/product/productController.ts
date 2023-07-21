@@ -31,8 +31,6 @@ export const product_detail = asyncHandler(async (req, res, next) => {
 
     const general = await pool.query(product_queries.product_general_detail, [product_id])
     const images = await pool.query(product_queries.product_images, [product_id])
-    const sales = await pool.query(product_queries.product_sales_detail, [product_id])
-    const purchase = await pool.query(product_queries.product_purchase_detail, [product_id])
     const show = await pool.query(product_queries.product_show_detail, [product_id])
 
     const imgUrl = images.rows[0]
@@ -53,17 +51,7 @@ export const product_detail = asyncHandler(async (req, res, next) => {
         lastestShow = show.rows[0]
     }
     
-    res.status(200).json({general: general.rows[0], images: imgUrl, inventory: '', sales: sales.rows, purchases: purchase.rows, show: lastestShow})
-})
-
-export const product_create_get = asyncHandler(async (req, res, next) => {
-    const suppliers = await pool.query(`SELECT 
-                                            name as supplier_name,
-                                            street || ', ' || city || ', ' || state || ' ' || zip as address,
-                                            phone_number,
-                                            suppliers.id as supplier_id
-                                        FROM suppliers`)
-    res.status(200).json({suppliers: suppliers.rows})
+    res.status(200).json({general: general.rows[0], images: imgUrl, show: lastestShow})
 })
 
 export const product_create_post = [
@@ -134,7 +122,7 @@ export const product_create_post = [
                 const productId = create_product.rows[0].id
 
                 var filePaths: string[] = []
-                if (req.files) {
+                if (req.files?.length !== 0) {
                     const files = req.files as Express.Multer.File[]
                     const tempPath = files[0].destination
 
@@ -152,7 +140,6 @@ export const product_create_post = [
                 }
 
                 await client.query(image_create, [productId, filePaths])
-
                 await client.query('COMMIT')
 
                 res.status(200).json({message: 'Success', productId})
@@ -162,11 +149,13 @@ export const product_create_post = [
                 //Removed the newly added directory
                 //Newly added directory can be named 'temp' or `${productId}`
                 //depends on where the try block fails.
-                const uploads = fs.readdirSync('./uploads')
-                const latestDir = uploads.sort((a, b) => {
-                    return fs.statSync('./upload' + a).mtime.getTime() - fs.statSync('./upload' + b).mtime.getTime()
-                })[0]
-                fs.rmSync(latestDir, { recursive: true, force: true })
+                if (req.files?.length !== 0) {
+                    const uploads = fs.readdirSync('./uploads')
+                    const latestDir = uploads.sort((a, b) => {
+                        return fs.statSync('./uploads/' + a).mtime.getTime() - fs.statSync('./uploads/' + b).mtime.getTime()
+                    })[0]
+                    fs.rmSync(latestDir, { recursive: true, force: true })
+                }
                 
                 res.status(500).json({error: err})
             } finally {
@@ -186,21 +175,6 @@ export const product_delete_post = asyncHandler(async (req, res, next) => {
     })
     await pool.query(product_queries.product_delete, [productID])
     res.status(200).json({message: 'Success'})
-})
-
-export const product_update_get = asyncHandler(async (req, res, next) => {
-    const product_id = parseInt(req.params.id)
-    const general = await pool.query(product_queries.product_general_detail, [product_id])
-    const images = await pool.query(product_queries.product_images, [product_id])
-    
-    const imgUrl = images.rows[0]
-                    ? images.rows[0].file_paths.map((file_path : any) => {
-                        const url = path.join('..', file_path)
-                        file_path = url
-                        return url
-                    })
-                    : []
-    res.status(200).json({general: general.rows[0], images: imgUrl})
 })
 
 export const product_update_post = [
@@ -226,19 +200,23 @@ export const product_update_post = [
         .escape(),
     body('expired_date')
         .trim()
-        .escape(),
+        .escape()
+        .toDate(),
     body('content')
         .trim()
         .escape(),
     body('store1_inv')
         .trim()
-        .escape(),
+        .escape()
+        .toInt(),
     body('store2_inv')
         .trim()
-        .escape(),
+        .escape()
+        .toInt(),
     body('store3_inv')
         .trim()
-        .escape(),
+        .escape()
+        .toInt(),
         
     asyncHandler(async (req, res, next) => {
         const id = parseInt(req.params.id)
@@ -253,16 +231,16 @@ export const product_update_post = [
             supplier: parseInt(req.body.supplier_id),
             expDate: req.body.expired_date,
             content: req.body.content,
-            store1_inv: parseInt(req.body.inventory_store_1),
-            store2_inv: parseInt(req.body.inventory_store_2),
-            store3_inv: parseInt(req.body.inventory_store_3),
+            store1_inv: req.body.inventory_store_1,
+            store2_inv: req.body.inventory_store_2,
+            store3_inv: req.body.inventory_store_3,
         }
         
         if(!errors.isEmpty()) {
             res.status(400).json({ errors })
         } else {
             //This will return the newly created product's id
-            const create_product = await pool.query(product_queries.product_update, [product.name, product.type, product.brand, product.supplier, product.sku, product.content, product.expDate, product.price, product.discount, product.store1_inv, product.store2_inv, product.store3_inv, id])
+            await pool.query(product_queries.product_update, [product.name, product.type, product.brand, product.supplier, product.sku, product.content, product.expDate, product.price, product.discount, product.store1_inv, product.store2_inv, product.store3_inv, id])
 
             res.status(200).json({message: 'Success'})
         }
