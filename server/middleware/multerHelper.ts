@@ -4,7 +4,7 @@ import fs from 'fs'
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        const folderName = req.params.productID
+        const folderName = 'temp'
         const destination = `./uploads/${folderName}`
 
         if (!fs.existsSync(destination)) {
