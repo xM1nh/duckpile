@@ -1,25 +1,41 @@
-import MainNavBar from '../../components/navbar/MainNavbar'
 import './_CustomerPage.css'
+
+import { useEffect, useState } from 'react'
+
+import { useGetCustomersQuery, useDeleteCustomerMutation } from '../../features/customers/customersApiSlice'
+
+import usePagination from '../../hooks/usePagination'
+
+import MainNavBar from '../../components/navbar/MainNavbar'
 import Table from '../../components/container/Table'
 import Pagination from '../../components/pagination/Pagination'
-import usePagination from '../../hooks/usePagination'
-import useFetch from '../../hooks/useFetch'
 import ButtonContainer from '../../components/buttons/ButtonContainer'
 import DeleteModal from '../../components/modal/DeleteModal'
-import { useEffect, useState } from 'react'
+import Spinner from '../../components/spinner/Spinner'
 
 const itemNumPerPage = 10
 
 const CustomerPage = () => {
+    const [count, setCount] = useState(0)
     const [modalOpen, setModalOpen] = useState(false)
     const [deleteItem, setDeleteItem] = useState(null)
-    const [data, setData] = useState({
-        list: [],
-        count: 0
-    })
+    const {
+        currentPage, 
+        pageCount, 
+        handleNext, 
+        handlePrev, 
+        handlePage
+    } = usePagination(count, itemNumPerPage)
 
-    const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(data.count, itemNumPerPage)
-    const {isLoading, apiData, serverErr} = useFetch(`/api/v1/customers?page=${currentPage}&count=${itemNumPerPage}`)
+    const {
+        data: customers,
+        isLoading: customersIsLoading,
+        isSuccess,
+        isError,
+        error
+    } = useGetCustomersQuery(currentPage)
+
+    const [deleteCustomer, {isloading}] = useDeleteCustomerMutation()
 
     const tableOpenModal = (e) => {
         setModalOpen(true)
@@ -31,54 +47,56 @@ const CustomerPage = () => {
         setDeleteItem(null)
     }
 
-    const handleDelete = (e) => {
-        fetch(`/api/v1/customers/customer/${deleteItem}/delete`, {
-            method: 'POST'
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data.message)
+    const handleDelete = async () => {
+        try {
+            await deleteCustomer(deleteItem)
             setModalOpen(false)
             setDeleteItem(null)
-            window.location.reload()
-        })
+        } catch (err) {
+            console.error(err)
+        }
     }
 
     useEffect(() => {
-        if (apiData) {
-            setData({
-                list: apiData.customers,
-                count: apiData.count
-            })
-        }
-    }, [apiData])
+        if (customers) setCount(customers.totalCount)
+    }, [customers])
+
+    let content
+
+    if (customersIsLoading) content = <Spinner />
+    if (isSuccess) {
+        const { ids, entities } = customers
+        const tableContents = ids?.length
+            ? ids.map(id => entities[id])
+            : []
+        content = 
+                <main>
+                    <div className='customer-list'>
+                        <div className='customer-list title'>Customer List</div>
+                            <div className='customer-list table'>
+                                <Table 
+                                    header_array={['Name', 'Address', 'Phone Number']} 
+                                    data_array={tableContents}
+                                    mainData='customer'
+                                    handleDelete={tableOpenModal}/>
+                            </div>
+                        <Pagination 
+                            currentPage={currentPage} 
+                            pageCount={pageCount}
+                            handleNext={handleNext}
+                            handlePrev={handlePrev}
+                            handlePage={handlePage}
+                        />
+                    </div>
+                </main>
+    }
 
     return (
         <div className="page customer">
             {modalOpen && <DeleteModal handleCancelClick={closeModal} handleDeleteClick={handleDelete}/>}
             <MainNavBar />
-
-            <main>
-                <div className='customer-list'>
-                    <div className='customer-list title'>Customer List</div>
-                    <div className='customer-list table'>
-                        <Table 
-                            header_array={['Name', 'Address', 'Phone Number']} 
-                            data_array={data.list}
-                            mainData='customer'
-                            handleDelete={tableOpenModal}/>
-                    </div>
-                    <Pagination 
-                        currentPage={currentPage} 
-                        pageCount={pageCount}
-                        handleNext={handleNext}
-                        handlePrev={handlePrev}
-                        handlePage={handlePage}
-                    />
-                </div>
-
-                <ButtonContainer create={true} createURL='/customer/create' />
-            </main>
+            {content}
+            <ButtonContainer create={true} createURL='/customer/create' />
         </div>
     )
 }

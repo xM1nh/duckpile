@@ -1,25 +1,31 @@
+import './_ProductListPage.css'
+
+import { useEffect, useState} from "react"
+
+import { useGetProductsQuery, useDeleteProductMutation } from "../../features/products/productsApiSlice"
+
+import usePagination from "../../hooks/usePagination"
+
 import MainNavbar from "../../components/navbar/MainNavbar"
 import Pagination from "../../components/pagination/Pagination"
-import usePagination from "../../hooks/usePagination"
-import './_ProductListPage.css'
 import Table from "../../components/container/Table"
 import SummaryContainer from "../../components/container/SummaryContainer"
 import ButtonContainer from "../../components/buttons/ButtonContainer"
 import DeleteModal from "../../components/modal/DeleteModal"
-import { useEffect, useState} from "react"
 import Spinner from "../../components/spinner/Spinner"
-import { useGetProductsQuery } from "../../features/products/productsApiSlice"
 
 const ProductListPage = () => { 
     const [count, setCount] = useState(0)
     const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(count, 25)
     const {
         data: products,
-        isLoading,
+        isLoading: productsIsLoading,
         isSuccess,
         isError,
         error
     } = useGetProductsQuery(currentPage)
+
+    const [deleteProduct, {isLoading}] = useDeleteProductMutation()
     
     const [openModal, setOpenModal] = useState(false)
     const [deleteItem, setDeleteItem] = useState(null)
@@ -33,25 +39,24 @@ const ProductListPage = () => {
         setDeleteItem(null)
     }
 
-    const handleDelete = () => {
-        fetch(`/api/v1/products/product/${deleteItem}/delete`, {
-            method: 'POST'
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.message === 'Success') {
-                console.log('Deleted')
+    const handleDelete = async () => {
+        try {
+            await deleteProduct(deleteItem)
+            console.log('Deleted')
                 setOpenModal(false)
                 setDeleteItem(null)
-                window.location.reload()
-            }
-        })
+        } catch (err) {
+            console.error(err)
+        }
     }
+
+    useEffect(() => {
+        if (products) setCount(products.totalCount)
+    }, [products])
 
     let content
 
-    if (isLoading) content = <Spinner />
-
+    if (productsIsLoading) content = <Spinner />
     if (isSuccess) {
         const { ids, entities } = products
         const tableContents = ids?.length
@@ -88,10 +93,6 @@ const ProductListPage = () => {
                     <ButtonContainer create={true} createURL='/product/create'/>
                 </main>
     }
-
-    useEffect(() => {
-        if (products) setCount(products.ids.length)
-    }, [products])
 
     return (
         <div className='page product_list'>

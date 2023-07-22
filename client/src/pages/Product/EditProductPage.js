@@ -1,12 +1,16 @@
-import MainNavbar from "../../components/navbar/MainNavbar"
 import './_EditProductPage.css'
-import FormInput from '../../components/forms/FormInput'
+
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
-import {v4 as uuidv4} from 'uuid'
 import { useNavigate } from "react-router-dom"
+
 import { useGetSuppliersQuery } from "../../features/suppliers/suppliersApiSlice"
 import { useEditProductMutation, useGetProductQuery } from "../../features/products/productsApiSlice"
+
+import {v4 as uuidv4} from 'uuid'
+
+import MainNavbar from "../../components/navbar/MainNavbar"
+import FormInput from '../../components/forms/FormInput'
 
 const EditProductPage = () => {
     const {id} = useParams()

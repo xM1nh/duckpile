@@ -1,12 +1,15 @@
 import './_CreateCustomerPage.css'
-import MainNavbar from '../../components/navbar/MainNavbar'
-import FormInput from '../../components/forms/FormInput'
+
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { useAddNewCustomerMutation } from '../../features/customers/customersApiSlice'
+
+import MainNavbar from '../../components/navbar/MainNavbar'
+import FormInput from '../../components/forms/FormInput'
+
 const CreateCustomerPage = () => {
     const navigate = useNavigate()
-    const [err, setErr] = useState(null)
     const [data, setData] = useState({
         firstName: '',
         lastName: '',
@@ -17,25 +20,16 @@ const CreateCustomerPage = () => {
         zip: ''
     })
 
-    const handleSubmit = (e) => {
+    const [addNewCustomer, {isLoading}] = useAddNewCustomerMutation()
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        fetch(`/api/v1/customers/create`, {
-            method: 'POST',
-            headers: {
-                'Content-Type':'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.errors) {
-                setErr(data.errors)
-                console.error(err)
-            } else {
-                console.log(data.message)
-                navigate(`/customer/${data.id}`)
-            }
-        })
+        try {
+            const response = await addNewCustomer(data).unwrap()
+            navigate(`/customer/${response.id}`)
+        } catch (err) {
+            console.error(err)
+        }
     }
 
     const handleChange = (e) => {

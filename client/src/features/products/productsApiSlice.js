@@ -3,7 +3,9 @@ import apiSlice from "../../app/api/apiSlice";
 
 const productsAdapter = createEntityAdapter({})
 
-const initialState = productsAdapter.getInitialState()
+const initialState = productsAdapter.getInitialState({
+    totalCount: null
+})
 
 const productsApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
@@ -18,7 +20,14 @@ const productsApiSlice = apiSlice.injectEndpoints({
                     product.id = product.product_id
                     return product
                 })
-                return productsAdapter.setAll(initialState, loadedProducts)
+
+                const normalizedData = productsAdapter.setAll(initialState, loadedProducts)
+                const response = {
+                    ...normalizedData,
+                    totalCount: responseData.count
+                }
+
+                return response
             },
             providesTags: (result, error, arg) => {
                 if (result?.ids) {
@@ -30,12 +39,12 @@ const productsApiSlice = apiSlice.injectEndpoints({
             }
         }),
         getProduct: builder.query({
-            query: productId => `/api/v1/products/product/${productId}`,
+            query: id => `/api/v1/products/${id}`,
             providesTags: (result, error, arg) => [{type: 'Product', id: arg}]
         }),
-        addNewProductPost: builder.mutation({
+        addNewProduct: builder.mutation({
             query: initPost => ({
-                url: '/api/v1/products/create',
+                url: '/api/v1/products',
                 method: 'POST',
                 body: initPost
             }),
@@ -43,13 +52,22 @@ const productsApiSlice = apiSlice.injectEndpoints({
         }),
         editProduct: builder.mutation({
             query: ({product_id: id, ...body}) => ({
-                url: `/api/v1/products/product/${id}/update`,
-                method: 'POST',
+                url: `/api/v1/products/${id}`,
+                method: 'PUT',
                 body: body
             }),
             invalidatesTags: (result, error, arg) => [
                 {type: 'Product', id: arg.id}
             ]
+        }),
+        deleteProduct: builder.mutation({
+            query: id => ({
+                url: `api/v1/products/${id}`,
+                method: 'DELETE'
+            }),
+            invalidatesTags: (result, error, arg) => [
+                {type: 'Product', id: arg.id}
+            ] 
         })
     })
 })
@@ -57,8 +75,9 @@ const productsApiSlice = apiSlice.injectEndpoints({
 export const {
     useGetProductsQuery,
     useGetProductQuery,
-    useAddNewProductPostMutation,
+    useAddNewProductMutation,
     useEditProductMutation,
+    useDeleteProductMutation
 } = productsApiSlice
 
 export const selectProductsResult = productsApiSlice.endpoints.getProducts.select()

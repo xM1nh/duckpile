@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 
-import { useGetProductQuery } from '../../features/products/productsApiSlice'
+import { useGetProductQuery, useDeleteProductMutation } from '../../features/products/productsApiSlice'
 import { selectSalesFromProductId, useGetSalesQuery } from '../../features/sales/salesApiSlice'
 import { useSelector } from 'react-redux'
 
@@ -28,6 +28,8 @@ const ProductDetailPage = () => {
         isError: productIsError,
         error: productError
     } = useGetProductQuery(id)
+
+    const [deleteProduct, {isLoading}] = useDeleteProductMutation()
     
     const {
         data,
@@ -55,16 +57,15 @@ const ProductDetailPage = () => {
         setModalOpen(false)
     }
 
-    const handleDelete = () => {
-        fetch(`/api/v1/products/product/${id}/delete`, {
-            method: 'POST'
-        })
-        .then(res => res.json())
-        .then(data => {
+    const handleDelete = async () => {
+        try {
+            await deleteProduct(id)
             console.log('deleted')
             setModalOpen(false)
             navigate('/products')
-        })
+        } catch (err) {
+            console.error(err)
+        }
     }
 
     let content

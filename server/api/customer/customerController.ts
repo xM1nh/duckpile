@@ -26,20 +26,9 @@ export const customer_detail = asyncHandler(async (req, res, next) => {
     const response = {
         general: customer.rows[0],
         sales: {
-            list: sales.rows.map((row: {products: string[]}) => {
-                var {products, ...rest} = row
-                let result: string = ''
-                row.products.forEach(product => {
-                    const name = product.split(',')[0]
-                    const quantity = product.split(',')[1]
-                    const value = quantity + 'x' + ' ' + name + ', '
-                    result += value
-                })
-                return {result, ...rest}
-            }),
             totalSales: totalSales,
             totalValue: totalValue,
-            mostBuyedProduct: mostBuyedProduct.rows[0]
+            mostBuyedProduct: mostBuyedProduct.rows[0] ?? {name: 'N/A', quantity: 'N/A'}
         }
     }
 
@@ -71,10 +60,10 @@ export const customer_create_post = [
         .escape(),
     body('zip')
         .trim()
-        .escape()
-        .toInt(),
+        .escape(),
 
     asyncHandler(async (req, res, next) => {
+        console.log(req.body)
         const errors = validationResult(req)
 
         const customer = {
@@ -135,8 +124,7 @@ export const customer_update_post = [
         .escape(),
     body('zip')
         .trim()
-        .escape()
-        .toInt(),
+        .escape(),
 
     asyncHandler(async (req, res, next) => {
         const id = parseInt(req.params.id)

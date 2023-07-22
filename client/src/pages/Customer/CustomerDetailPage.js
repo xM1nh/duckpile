@@ -1,30 +1,49 @@
 import './_CustomerDetailPage.css'
+
+import { useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+
+import { useGetCustomerQuery, useDeleteCustomerMutation } from '../../features/customers/customersApiSlice'
+import { selectSalesFromCustomerId, useGetSalesQuery } from '../../features/sales/salesApiSlice'
+import { useSelector } from 'react-redux'
+
 import MainNavbar from '../../components/navbar/MainNavbar'
 import Table from '../../components/container/Table'
 import SummaryContainer from '../../components/container/SummaryContainer'
 import ButtonContainer from '../../components/buttons/ButtonContainer'
 import DeleteModal from '../../components/modal/DeleteModal'
-import useFetch from '../../hooks/useFetch'
-import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import Spinner from '../../components/spinner/Spinner'
+
 
 const CustomerDetailPage = () => {
     const {id} = useParams()
     const navigate = useNavigate()
     const [modalOpen, setModalOpen] = useState(false)
-    const [customerData, setCustomerData] = useState({
-        name: '',
-        address: '',
-        phone_number: '',
-    })
-    const [customerSaleData, setCustomerSaleData] = useState({
-        list: [],
-        mostBuyedProduct: [],
-        totalSales: '',
-        totalValue: ''
-    })
 
-    const {isLoading, apiData, serverErr} = useFetch(`/api/v1/customers/customer/${id}`)
+    const {
+        data: customer,
+        isLoading: customerIsLoading,
+        isSuccess,
+        isError,
+        error
+    } = useGetCustomerQuery(id)
+
+    const {
+        data,
+    } = useGetSalesQuery()
+
+    const recentSales = useSelector(state => 
+        selectSalesFromCustomerId(state, parseInt(id))
+        ).map(sale => {
+            const {products, customer_name, ...rest} = sale
+            let result = ''
+            sale.products.forEach(product => {
+                result += product.quantity.toString().concat('x ', product.product_name, ', ')
+            })
+            return {result, ...rest}
+        })
+
+    const [deleteCustomer, {isLoading}] = useDeleteCustomerMutation()
 
     const openModal = () => {
         setModalOpen(true)
@@ -34,68 +53,57 @@ const CustomerDetailPage = () => {
         setModalOpen(false)
     }
 
-    const handleDelete = () => {
-        fetch(`/api/v1/customers/customer/${id}/delete`, {
-            method: 'POST'
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log('deleted')
+    const handleDelete = async () => {
+        try {
+            await deleteCustomer(id)
             setModalOpen(false)
-            navigate('/customers')
-        })
-    }
-    
-    useEffect(() => {
-        if (apiData) {
-            setCustomerData({
-                name: apiData.general.first_name + ' ' + apiData.general.last_name,
-                address: apiData.general.street + ', ' + apiData.general.city + ', ' + apiData.general.state + ' ' + apiData.general.zip,
-                phone_number: apiData.general.phone_number
-            })
-            setCustomerSaleData({
-                list: apiData.sales.list,
-                mostBuyedProduct: apiData.sales.mostBuyedProduct ? apiData.sales.mostBuyedProduct.name : 'No Data',
-                totalSales: apiData.sales.totalSales,
-                totalValue: apiData.sales.totalValue
-            })
+            navigate(-1)
+        } catch (err) {
+            console.error(err)
         }
-    }, [apiData])
+    }
+
+    let content
+
+    if (customerIsLoading) content = <Spinner />
+    if (isSuccess) {
+        const name = customer.general.first_name + ' ' + customer.general.last_name
+        const address = customer.general.street + ', ' + customer.general.city + ', ' + customer.general.state + ' ' + customer.general.zip
+        content = <main>
+            <div className='info'>
+                <div className='customer-name'>{name}</div>
+                <div className='customer-phone'>{customer.general.phone_number}</div>
+                <div className='customer-address'>{address}</div>
+            </div>
+            <div className='customer-summary'>
+                <SummaryContainer text_to_show='Total Sales' data_to_show={customer.sales.totalSales}/>
+                <SummaryContainer text_to_show='Total Value' data_to_show={'$' + customer.sales.totalValue}/>
+                <SummaryContainer text_to_show='Most Buyed Product' data_to_show={customer.sales.mostBuyedProduct.name}/>
+            </div>
+            <div className='sales'>
+                <div className='table-title sales'>Recent Sales</div>
+                <Table 
+                header_array={['Products', 'Sale', 'Date', 'Total Amount', 'Payment Method', 'Location', 'Staff']}
+                data_array={recentSales}
+                mainData='sale'
+                />
+            </div>
+        </main>
+    }
 
     return (
         <div className='page customer-detail'>
             {modalOpen && <DeleteModal handleCancelClick={closeModal} handleDeleteClick={handleDelete} />}
             <MainNavbar />
-
-            <main>
-                <div className='info'>
-                    <div className='customer-name'>{customerData.name}</div>
-                    <div className='customer-phone'>{customerData.phone_number}</div>
-                    <div className='customer-address'>{customerData.address}</div>
-                </div>
-                <div className='customer-summary'>
-                    <SummaryContainer text_to_show='Total Sales' data_to_show={customerSaleData.totalSales}/>
-                    <SummaryContainer text_to_show='Total Value' data_to_show={'$' + customerSaleData.totalValue}/>
-                    <SummaryContainer text_to_show='Most Buyed Product' data_to_show={customerSaleData.mostBuyedProduct}/>
-                </div>
-                <div className='sales'>
-                    <div className='table-title sales'>All Sales</div>
-                    <Table 
-                    header_array={['Products', 'Sale', 'Date', 'Total Amount', 'Payment Method', 'Location', 'Staff']}
-                    data_array={customerSaleData.list}
-                    mainData='sale'
-                    />
-                </div>
-
-                <ButtonContainer 
-                        create={true}
-                        edit={true}
-                        del={true}
-                        createURL='/customer/create'
-                        editURL={`/customer/${id}/edit`}
-                        handleDelete={openModal}
-                    />
-            </main>
+            {content}
+            <ButtonContainer 
+                create={true}
+                edit={true}
+                del={true}
+                createURL='/customer/create'
+                editURL={`/customer/${id}/edit`}
+                handleDelete={openModal}
+            />
         </div>
     )
 }

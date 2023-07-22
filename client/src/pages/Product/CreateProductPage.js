@@ -3,7 +3,7 @@ import './_CreateProductForm.css'
 import {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useAddNewProductPostMutation } from '../../features/products/productsApiSlice'
+import { useAddNewProductMutation } from '../../features/products/productsApiSlice'
 import { useGetSuppliersQuery } from '../../features/suppliers/suppliersApiSlice'
 
 import FormInput from '../../components/forms/FormInput'
@@ -29,7 +29,7 @@ const CreateProductForm = () => {
         imageData: []
     })
 
-    const [addNewPost, {isLoading}] = useAddNewProductPostMutation()
+    const [addNewProduct, {isLoading}] = useAddNewProductMutation()
 
     const {
         data: suppliers,
@@ -86,7 +86,7 @@ const CreateProductForm = () => {
             
         if (canSave) {
             try {
-                const { productId } = await addNewPost(formData).unwrap()
+                const { productId } = await addNewProduct(formData).unwrap()
                 e.target.reset()
                     setMainImage(null)
                     setBlob([])
