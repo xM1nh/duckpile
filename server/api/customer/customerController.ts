@@ -66,7 +66,6 @@ export const customer_create_post = [
         .escape(),
 
     asyncHandler(async (req, res, next) => {
-        console.log(req.body)
         const errors = validationResult(req)
 
         const customer = {
@@ -94,12 +93,6 @@ export const customer_delete_post = asyncHandler(async (req, res, next) => {
     const id = parseInt(req.params.id)
     await pool.query(customer_queries.customer_delete, [id])
     res.status(200).json({message: 'Deleted'})
-})
-
-export const customer_update_get = asyncHandler(async (req, res, next) => {
-    const id = parseInt(req.params.id)
-    const customer = await pool.query(customer_queries.customer_detail, [id])
-    res.status(200).json(customer.rows[0])
 })
 
 export const customer_update_post = [

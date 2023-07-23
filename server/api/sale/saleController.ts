@@ -110,13 +110,13 @@ export const sale_create_post = [
 
         const sale = {
             customer: {
-                id: req.body.customer_id ? req.body.customer_id : null,
+                id: req.body.customer_id ?? null,
                 first_name: req.body.customer_name ? req.body.customer_name.split(' ')[0] : null,
                 last_name: req.body.customer_name ? req.body.customer_name.split(' ')[1] : null,
                 phone_number: req.body.customer_phone ? parseInt(req.body.customer_phone) : null,
-                street: req.body.customer_street ? req.body.customer_street : null,
-                city: req.body.customer_city ? req.body.customer_city : null,
-                state: req.body.customer_state ? req.body.customer_state : null,
+                street: req.body.customer_street ?? null,
+                city: req.body.customer_city ?? null,
+                state: req.body.customer_state ?? null,
                 zip: req.body.customer_zip ? parseInt(req.body.customer_zip) : null
             },
             products: JSON.parse(req.body.products),
@@ -231,13 +231,13 @@ export const sale_update_post = [
 
         const sale = {
             customer: {
-                id: req.body.customer_id ? req.body.customer_id : null,
+                id: req.body.customer_id ?? null,
                 first_name: req.body.customer_name ? req.body.customer_name.split(' ')[0] : null,
                 last_name: req.body.customer_name ? req.body.customer_name.split(' ')[1] : null,
                 phone_number: req.body.customer_phone ? parseInt(req.body.customer_phone) : null,
-                street: req.body.customer_street ? req.body.customer_street : null,
-                city: req.body.customer_city ? req.body.customer_city : null,
-                state: req.body.customer_state ? req.body.customer_state : null,
+                street: req.body.customer_street ?? null,
+                city: req.body.customer_city ?? null,
+                state: req.body.customer_state ?? null,
                 zip: req.body.customer_zip ? parseInt(req.body.customer_zip) : null
             },
             products: JSON.parse(req.body.products),
