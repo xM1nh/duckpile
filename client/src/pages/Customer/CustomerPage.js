@@ -33,7 +33,7 @@ const CustomerPage = () => {
         isSuccess,
         isError,
         error
-    } = useGetCustomersQuery(currentPage, itemNumberPerPage)
+    } = useGetCustomersQuery({page: currentPage, count: itemNumberPerPage})
 
     const [deleteCustomer, {isloading}] = useDeleteCustomerMutation()
 

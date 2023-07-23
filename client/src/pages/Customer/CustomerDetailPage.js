@@ -30,7 +30,7 @@ const CustomerDetailPage = () => {
 
     const {
         data,
-    } = useGetSalesQuery()
+    } = useGetSalesQuery({page: 1, count: 200})
 
     const recentSales = useSelector(state => 
         selectSalesFromCustomerId(state, parseInt(id))

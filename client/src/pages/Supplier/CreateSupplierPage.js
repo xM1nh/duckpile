@@ -1,12 +1,15 @@
 import './_CreateSupplierPage.css'
-import MainNavbar from '../../components/navbar/MainNavbar'
-import FormInput from '../../components/forms/FormInput'
+
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { useAddNewSupplierMutation } from '../../features/suppliers/suppliersApiSlice'
+
+import MainNavbar from '../../components/navbar/MainNavbar'
+import FormInput from '../../components/forms/FormInput'
+
 const CreateSupplierPage = () => {
     const navigate = useNavigate()
-    const [err, setErr] = useState(null)
     const [data, setData] = useState({
         name: '',
         phoneNumber: '',
@@ -16,25 +19,16 @@ const CreateSupplierPage = () => {
         zip: ''
     })
 
-    const handleSubmit = (e) => {
+    const [addNewSupplier, {isLoading}] = useAddNewSupplierMutation()
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        fetch(`/api/v1/suppliers/create`, {
-            method: 'POST',
-            headers: {
-                'Content-Type':'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.errors) {
-                setErr(data.errors)
-                console.error(err)
-            } else {
-                console.log(data.message)
-                navigate(`/supplier/${data.id}`)
-            }
-        })
+        try {
+            const response = await addNewSupplier(data).unwrap()
+            navigate(`/supplier/${response.id}`)
+        } catch (err) {
+            console.error(err)
+        }
     }
 
     const handleChange = (e) => {
