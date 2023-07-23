@@ -4,16 +4,12 @@ const router = express.Router()
 
 router.get('/', sale_controller.sale_list)
 
-router.get('/sale/:id', sale_controller.sale_detail)
+router.get('/:id', sale_controller.sale_detail)
 
-router.get('/create', sale_controller.sale_create_get)
+router.post('/', sale_controller.sale_create_post)
 
-router.post('/create', sale_controller.sale_create_post)
+router.delete('/:id/', sale_controller.sale_delete_post)
 
-router.post('/sale/:id/delete', sale_controller.sale_delete_post)
-
-router.get('/sale/:id/update', sale_controller.sale_update_get)
-
-router.post('/sale/:id/update', sale_controller.sale_update_post)
+router.put('/:id', sale_controller.sale_update_post)
 
 export = router

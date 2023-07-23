@@ -5,27 +5,30 @@ import asyncHandler from 'express-async-handler'
 import { body, validationResult } from 'express-validator'
 
 export const sale_list = asyncHandler(async (req, res, next) => {
-    const pagination = {
-        limit: req.query.count,
-        offset: (Number(req.query.page) - 1) * Number(req.query.count)
-    }
-    const sales = await pool.query(sale_queries.get_all_sales, [pagination.limit, pagination.offset])
+    const limit = (req.query.count === 'undefined')
+        ? null
+        : Number(req.query.count) 
+    const offset = (req.query.count === 'undefined' && req.query.page === 'undefined') 
+        ? null
+        : (Number(req.query.page) - 1) * Number(req.query.count)
+
+    const sales = await pool.query(sale_queries.get_all_sales, [limit, offset])
     const salesCount = await pool.query(sale_queries.get_sale_count)
     const most_buyed_product = await pool.query(sale_queries.get_most_buyed_product)
     const most_buyed_customer = await pool.query(sale_queries.get_most_buyed_customer)
 
     const response = sales.rows.map((row: {products: string[]}) => {
-        var {products, ...rest} = row
-        let result: string = ''
-        products.forEach(product => {
+        var {products: productsRow, ...rest} = row
+        const products = productsRow.map(product => {
             const product_name = product.split(',')[0]
-            const quantity = product.split(',')[1]
-            const value = quantity + 'x' + ' ' + product_name + ', '
-            result += value
+            const quantity = parseInt(product.split(',')[1])
+            const product_price = Number(product.split(',')[2])
+            const product_id = parseInt(product.split(',')[3])
+            return ({product_name, product_price, quantity, product_id})
         })
-        return {result, ...rest}
+        return {products, ...rest}
     })
-    res.status(200).json({summary: response, count: salesCount.rows[0].count, mostBuyedProduct: most_buyed_product.rows[0].name, mostBuyedCustomer: most_buyed_customer.rows[0].customer_name})
+    res.status(200).json({sales: response, count: salesCount.rows[0].count, mostBuyedProduct: most_buyed_product.rows[0].name, mostBuyedCustomer: most_buyed_customer.rows[0].customer_name})
 })
 
 export const sale_detail = asyncHandler(async (req, res, next) => {
@@ -34,34 +37,35 @@ export const sale_detail = asyncHandler(async (req, res, next) => {
 
     const response = {
         customer: {
-            name: sale.rows[0].first_name.concat(' ', sale.rows[0].last_name),
-            address: sale.rows[0].street.concat(', ', sale.rows[0].city, ', ', sale.rows[0].state, ' ', sale.rows[0].zip),
-            phone: sale.rows[0].phone_number
+            firstName: sale.rows[0].first_name, 
+            lastName: sale.rows[0].last_name,
+            street: sale.rows[0].street, 
+            city: sale.rows[0].city, 
+            state: sale.rows[0].state, 
+            zip: sale.rows[0].zip,
+            phone: sale.rows[0].phone_number,
+            id: sale.rows[0].customer_id
         },
         sale: {
             products: sale.rows[0].products.map((product: string) => {
                 const product_name = product.split(',')[0]
-                const quantity = product.split(',')[1]
-                const product_price = product.split(',')[2]
-                const product_id = product.split(',')[3]
+                const quantity = parseInt(product.split(',')[1])
+                const product_price = Number(product.split(',')[2])
+                const product_id = parseInt(product.split(',')[3])
                 return ({product_name, product_price, quantity, product_id})
             }),
             totalAmount: sale.rows[0].total_amount,
             paymentMethod: sale.rows[0].payment_method
         },
-        date: sale.rows[0].sale_date,
-        store: sale.rows[0].store_name,
+        date: new Date(sale.rows[0].sale_date).toISOString().substring(0, 10),
+        store: {
+            name: sale.rows[0].store_name,
+            id: sale.rows[0].store_id
+        },
         staff: sale.rows[0].staff
     }
 
     res.status(200).json(response)
-})
-
-export const sale_create_get = asyncHandler(async (req, res, next) => {
-    const products = await pool.query('SELECT products.name, products.price, products.id FROM products')
-    const customers = await pool.query(get_all_customers, [null, null])
-    const stores = await pool.query('SELECT stores.store_name as name, stores.id FROM stores')
-    res.status(200).json({products: products.rows, customers: customers.rows, stores: stores.rows})
 })
 
 export const sale_create_post = [
@@ -161,8 +165,8 @@ export const sale_create_post = [
                     message = 'Successfully updated customer information'
                 }
                 const saleID = await client.query(sale_queries.sale_create, [sale.date, sale.store.id, sale.staff, sale.payment_method, sale.customer.id, sale.total])
-                sale.products.forEach(async (product: {id: Number, quantity: Number}) => {
-                    await client.query(`INSERT INTO sale_products (sale_id, product_id, quantity) VALUES ($1, $2, $3)`, [saleID.rows[0].id, product.id, product.quantity])
+                sale.products.forEach(async (product: {product_id: Number, quantity: Number}) => {
+                    await client.query(`INSERT INTO sale_products (sale_id, product_id, quantity) VALUES ($1, $2, $3)`, [saleID.rows[0].id, product.product_id, product.quantity])
                 })
                 await client.query('COMMIT')
 
@@ -182,49 +186,6 @@ export const sale_delete_post = asyncHandler(async (req, res, next) => {
     const id = parseInt(req.params.id)
     await pool.query(sale_queries.sale_delete, [id])
     res.status(200).json({message:'Success'})
-})
-
-export const sale_update_get = asyncHandler(async (req, res, next) => {
-    const id = parseInt(req.params.id)
-    const sale = await pool.query(sale_queries.sale_detail, [id])
-    const products = await pool.query('SELECT products.name, products.price, products.id FROM products')
-    const customers = await pool.query(get_all_customers, [null, null])
-    const stores = await pool.query('SELECT stores.store_name as name, stores.id FROM stores')
-
-    const response = {
-        sale: {
-            date: new Date(sale.rows[0].sale_date).toISOString().slice(0, 10),
-            totalAmount: sale.rows[0].total_amount,
-            paymentMethod: sale.rows[0].payment_method,
-            customer: {
-                firstName: sale.rows[0].first_name,
-                lastName: sale.rows[0].last_name,
-                phone: sale.rows[0].phone_number,
-                street: sale.rows[0].street,
-                city: sale.rows[0].city,
-                state: sale.rows[0].state,
-                zip: sale.rows[0].zip,
-                id: sale.rows[0].customer_id
-            },
-            products: sale.rows[0].products.map((product: string) => {
-                const product_name = product.split(',')[0]
-                const quantity = parseInt(product.split(',')[1])
-                const product_price = Number(product.split(',')[2])
-                const product_id = parseInt(product.split(',')[3])
-                return ({product_name, product_price, quantity, product_id})
-            }),
-            staff: sale.rows[0].staff,
-            store: {
-                name: sale.rows[0].store_name,
-                id: sale.rows[0].store_id
-            }
-        },
-        products: products.rows,
-        customers: customers.rows,
-        stores: stores.rows
-    }
-
-    res.status(200).json(response)
 })
 
 export const sale_update_post = [
@@ -266,7 +227,6 @@ export const sale_update_post = [
 
     asyncHandler(async (req, res, next) => {
         const id = parseInt(req.params.id)
-        console.log(req.body.products)
         const errors = validationResult(req)
 
         const sale = {
@@ -291,7 +251,6 @@ export const sale_update_post = [
             total: req.body.total
         }
 
-        console.log (sale)
         if (!errors.isEmpty()) {
             res.status(400).json(errors)
         } else {
@@ -312,8 +271,8 @@ export const sale_update_post = [
 
                 await client.query(sale_queries.sale_update, [sale.date, sale.store.id, sale.staff, sale.payment_method, sale.customer.id, sale.total, id])
                 await client.query('DELETE FROM sale_products WHERE sale_products.sale_id = $1', [id])
-                sale.products.forEach(async (product: {id: Number, quantity: Number}) => {
-                    await client.query(`INSERT INTO sale_products (sale_id, product_id, quantity) VALUES ($1, $2, $3)`, [id, product.id, product.quantity])
+                sale.products.forEach(async (product: {product_id: Number, quantity: Number}) => {
+                    await client.query(`INSERT INTO sale_products (sale_id, product_id, quantity) VALUES ($1, $2, $3)`, [id, product.product_id, product.quantity])
                 })
                 await client.query('COMMIT')
                 res.status(200).json({message: 'Success'})
