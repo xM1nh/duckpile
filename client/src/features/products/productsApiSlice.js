@@ -10,7 +10,7 @@ const initialState = productsAdapter.getInitialState({
 const productsApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         getProducts: builder.query({
-            query: page => `/api/v1/products?page=${page}&count=25`,
+            query: ({page, count}) => `/api/v1/products?page=${page}&count=${count}`,
             validateStatus: (response, result) => {
                 return response.status === 200 && !result.isError
             },
@@ -40,7 +40,9 @@ const productsApiSlice = apiSlice.injectEndpoints({
         }),
         getProduct: builder.query({
             query: id => `/api/v1/products/${id}`,
-            providesTags: (result, error, arg) => [{type: 'Product', id: arg}]
+            providesTags: (result, error, arg) => [
+                {type: 'Product', id: arg.id}
+            ]
         }),
         addNewProduct: builder.mutation({
             query: initPost => ({

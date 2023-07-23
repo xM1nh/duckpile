@@ -4,11 +4,14 @@ import asyncHandler from 'express-async-handler'
 import { body, validationResult } from 'express-validator'
 
 export const customer_list = asyncHandler(async (req, res, next) => {
-    const pagination = {
-        limit: Number(req.query.count),
-        offset: (Number(req.query.page) - 1) * Number(req.query.count)
-    }
-    const customers = await pool.query(customer_queries.get_all_customers, [pagination.limit, pagination.offset])
+    const limit = (req.query.count === 'undefined')
+        ? null
+        : Number(req.query.count) 
+    const offset = (req.query.count === 'undefined' && req.query.page === 'undefined') 
+        ? null
+        : (Number(req.query.page) - 1) * Number(req.query.count)
+
+    const customers = await pool.query(customer_queries.get_all_customers, [limit, offset])
     const customersCount = await pool.query(customer_queries.get_customers_count)
     res.status(200).json({customers: customers.rows, count: customersCount.rows[0].count})
 })

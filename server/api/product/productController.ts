@@ -8,11 +8,14 @@ import { image_create } from '../images/imageQueries'
 import { uploadMulti } from '../../middleware/multerHelper'
 
 export const product_list = asyncHandler(async (req, res, next) => {
-    const pagination = {
-        limit: Number(req.query.count),
-        offset: (Number(req.query.page) - 1) * Number(req.query.count)
-    }
-    const products = await pool.query(product_queries.get_all_products, [pagination.limit, pagination.offset])
+    const limit = (req.query.count === 'undefined')
+        ? null
+        : Number(req.query.count) 
+    const offset = (req.query.count === 'undefined' && req.query.page === 'undefined') 
+        ? null
+        : (Number(req.query.page) - 1) * Number(req.query.count)
+
+    const products = await pool.query(product_queries.get_all_products, [limit, offset])
     const totalProducts = await pool.query(product_queries.get_product_count)
     const productsUpdatedImageURL = products.rows.map((row: any) => {
         if (row.image) {

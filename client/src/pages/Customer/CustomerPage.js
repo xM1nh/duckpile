@@ -13,7 +13,7 @@ import ButtonContainer from '../../components/buttons/ButtonContainer'
 import DeleteModal from '../../components/modal/DeleteModal'
 import Spinner from '../../components/spinner/Spinner'
 
-const itemNumPerPage = 10
+const itemNumberPerPage = 25
 
 const CustomerPage = () => {
     const [count, setCount] = useState(0)
@@ -25,7 +25,7 @@ const CustomerPage = () => {
         handleNext, 
         handlePrev, 
         handlePage
-    } = usePagination(count, itemNumPerPage)
+    } = usePagination(count, itemNumberPerPage)
 
     const {
         data: customers,
@@ -33,7 +33,7 @@ const CustomerPage = () => {
         isSuccess,
         isError,
         error
-    } = useGetCustomersQuery(currentPage)
+    } = useGetCustomersQuery(currentPage, itemNumberPerPage)
 
     const [deleteCustomer, {isloading}] = useDeleteCustomerMutation()
 

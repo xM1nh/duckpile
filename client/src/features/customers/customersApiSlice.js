@@ -10,7 +10,7 @@ const initialState = customersAdapter.getInitialState({
 const customersApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         getCustomers: builder.query({
-            query: page => `/api/v1/customers?page=${page}&count=25`,
+            query: ({page, count}) => `/api/v1/customers?page=${page}&count=${count}`,
             validateStatus: (response, result) => {
                 return response.status === 200 && !result.isError
             },

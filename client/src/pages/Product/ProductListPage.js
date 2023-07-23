@@ -14,16 +14,24 @@ import ButtonContainer from "../../components/buttons/ButtonContainer"
 import DeleteModal from "../../components/modal/DeleteModal"
 import Spinner from "../../components/spinner/Spinner"
 
+const itemNumberPerPage = 25
+
 const ProductListPage = () => { 
     const [count, setCount] = useState(0)
-    const {currentPage, pageCount, handleNext, handlePrev, handlePage} = usePagination(count, 25)
+    const {
+        currentPage, 
+        pageCount, 
+        handleNext, 
+        handlePrev, 
+        handlePage
+    } = usePagination(count, itemNumberPerPage)
     const {
         data: products,
         isLoading: productsIsLoading,
         isSuccess,
         isError,
         error
-    } = useGetProductsQuery(currentPage)
+    } = useGetProductsQuery({page: currentPage, count: itemNumberPerPage})
 
     const [deleteProduct, {isLoading}] = useDeleteProductMutation()
     
@@ -97,7 +105,7 @@ const ProductListPage = () => {
     return (
         <div className='page product_list'>
             {openModal && <DeleteModal handleCancelClick={closeModal} handleDeleteClick={handleDelete}/>}
-            {isSuccess && <MainNavbar />}
+            <MainNavbar />
             {content}
         </div>
     )
